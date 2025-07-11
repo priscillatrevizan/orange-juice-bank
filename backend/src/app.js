@@ -1,15 +1,9 @@
 const express = require('express');
-const cors = require('cors');
-
 const app = express();
+const apiV1Routes = require('./api/v1');
 
-// Middlewares globais
-app.use(cors());
-app.use(express.json());
-
-// Rotas base de teste
-app.get('/', (req, res) => {
-  res.send('OrangeJuiceBank API rodando!');
-});
+app.use(express.json()); // necessário para `req.body`
+app.use('/api/v1', apiV1Routes);
 
 module.exports = app;
+
