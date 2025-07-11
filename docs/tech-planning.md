@@ -2,12 +2,12 @@
 
 ## 1. Preparação Inicial
 
-- [ ]   Utilizar o template do repositório do desafio
-- [ ]   Criar repositório no GitHub
-- [ ]   Clonar repositório localmente
-- [ ]   Adicionar `README.md` com informações básicas
-- [ ]   Adicionar `execution-checklist.md` com o planejamento de Execução do Projeto
-- [ ]   Criar as branches: `main`, `development`, `docs`
+- [x]   Utilizar o template do repositório do desafio
+- [x]   Criar repositório no GitHub
+- [x]   Clonar repositório localmente
+- [x]   Adicionar `README.md` com informações básicas
+- [x]   Adicionar `execution-checklist.md` com o planejamento de Execução do Projeto
+- [x]   Criar as branches: `main`, `development`, `docs`
 - [ ]   Criar primeira branch de feature: `feat/init-setup`
 
 ## 2. Estrutura Inicial do Projeto (Backend)
