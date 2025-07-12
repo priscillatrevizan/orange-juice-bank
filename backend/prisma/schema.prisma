@@ -15,7 +15,9 @@ model User {
   birthDate     DateTime
   createdAt     DateTime      @default(now())
 
-  transactions  Transaction[] 
+  transactions  Transaction[]
+  accounts      Account[]
+ 
 }
 
 
@@ -60,3 +62,19 @@ model Transaction {
   amount          Int       // quantidade de cotas ou fração investida
   createdAt       DateTime  @default(now())
 }
+
+model Account {
+  id        Int       @id @default(autoincrement())
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int
+  type      String    // 'corrente' ou 'investimento'
+  balance   Float     @default(0)
+  createdAt DateTime  @default(now())
+
+  @@unique([userId, type])
+
+  // Relacionamento futuro com movimentações e transferências
+  // movimentacoesEnviadas     Movimentacao[] @relation("ContaOrigem")
+  // movimentacoesRecebidas    Movimentacao[] @relation("ContaDestino")
+}
+

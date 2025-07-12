@@ -1,8 +1,16 @@
 const usersService = require('./users.service');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 async function createUser(req, res) {
   try {
     const newUser = await usersService.create(req.body);
+    await prisma.account.createMany({
+  data: [
+    { userId: newUser.id, type: 'corrente', balance: 0 },
+    { userId: newUser.id, type: 'investimento', balance: 0 },
+  ],
+});
     return res.status(201).json(newUser);
   } catch (error) {
     return res.status(400).json({ error: error.message });

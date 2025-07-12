@@ -1,4 +1,4 @@
-const { handleBuyTransaction } = require('./transactions.service');
+
 
 async function createTransaction(req, res) {
   try {
@@ -17,4 +17,35 @@ async function createTransaction(req, res) {
   }
 }
 
-module.exports = { createTransaction };
+const { handleBuyTransaction, listUserTransactions } = require('./transactions.service');
+
+async function getUserTransactions(req, res) {
+  try {
+    const userId = req.user.id;
+    const transactions = await listUserTransactions(userId);
+    return res.json(transactions);
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+}
+
+const { listExtrato } = require('./transactions.service');
+
+async function getUserExtrato(req, res) {
+  try {
+    const userId = req.user.id;
+    const { type, account, startDate, endDate } = req.query;
+
+    const extrato = await listExtrato({ userId, type, account, startDate, endDate });
+    return res.json(extrato);
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+}
+
+module.exports = {
+  createTransaction,
+  getUserTransactions,
+  getUserExtrato
+};
+

@@ -1,6 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+// Compra de ações ou renda fixa
 async function handleBuyTransaction({ userId, stockId, fixedIncomeId, amount, type }) {
   if (!amount || amount <= 0) {
     throw new Error('Quantidade inválida.');
@@ -37,4 +38,41 @@ async function handleBuyTransaction({ userId, stockId, fixedIncomeId, amount, ty
   });
 }
 
-module.exports = { handleBuyTransaction };
+// Lista as transações de um usuário
+async function listUserTransactions(userId) {
+  return await prisma.transaction.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'desc' },
+    include: {
+      stock: true,
+      fixedIncome: true,
+    },
+  });
+}
+
+// Lista o extrato do usuário com filtros opcionais
+async function listExtrato({ userId, type, account, startDate, endDate }) {
+  const filters = { userId };
+
+  if (type) filters.type = type;
+
+  if (startDate || endDate) {
+    filters.createdAt = {};
+    if (startDate) filters.createdAt.gte = new Date(startDate);
+    if (endDate) filters.createdAt.lte = new Date(endDate);
+  }
+
+  // Futuramente adicionar um campo 'accountType' se houver uma tabela de contas separadas
+
+  return await prisma.transaction.findMany({
+    where: filters,
+    orderBy: { createdAt: 'desc' },
+    include: {
+      stock: true,
+      fixedIncome: true,
+    },
+  });
+}
+
+
+module.exports = { handleBuyTransaction, listUserTransactions, listExtrato };
