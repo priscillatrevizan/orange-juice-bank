@@ -2,70 +2,73 @@
 
 ## 1. Preparação Inicial
 
-- [x]   Utilizar o template do repositório do desafio
-- [x]   Criar repositório no GitHub
-- [x]   Clonar repositório localmente
-- [x]   Adicionar `README.md` com informações básicas
-- [x]   Adicionar `execution-checklist.md` com o planejamento de Execução do Projeto
-- [x]   Criar as branches: `main`, `development`, `docs`
-- [ ]   Criar primeira branch de feature: `feat/init-setup`
+- [x] Utilizar o template do repositório do desafio
+- [x] Criar repositório no GitHub
+- [x] Clonar repositório localmente
+- [x] Adicionar `README.md` com informações básicas
+- [x] Adicionar `execution-checklist.md` com o planejamento de Execução do Projeto
+- [x] Criar as branches: `main`, `development`, `docs`
+- [x] Criar primeira branch de feature: `feat/init-setup`
 
 ## 2. Estrutura Inicial do Projeto (Backend)
 
-- [ ]   Criar projeto Node.js com Express e TypeScript
-- [ ]   Estruturar pastas com base em Clean Architecture
+- [x] Criar projeto Node.js com Express
+- [x] Estruturar pastas com base em arquitetura modular limpa
 
 ```
     src/
-    ├── domain/
-    ├── usecases/
-    ├── infrastructure/
-    ├── interfaces/
-    ├── database/
+    ├── api/
+    │   └── v1/
+    │       └── users/
     ├── config/
-    └── main.ts
+    ├── middlewares/
+    ├── models/
+    ├── services/
+    ├── utils/
+    ├── app.js
+    └── server.js
 ```
 
-- [ ]   Inicializar e dependências base: `express`, `cors`, `dotenv`, `pg`
-- [ ]   Instalar dependências de desenvolvimento: `typescript`, `ts-node-dev`, `@types/express`, `@types/node`
+- [x] Inicializar e instalar dependências base: `express`, `cors`, `dotenv`, `pg`, `prisma`, `@prisma/client`
+- [x] Instalar dependências de desenvolvimento: `nodemon`, `eslint`, `prisma`
 
 ## 3. Banco de Dados
 
-- [ ]   Criar banco PostgreSQL local
-- [ ]   Adicionar `prisma` para migrations e ORM
-- [ ]   Inicializar Prisma com `npx prisma init`
-- [ ]   Criar esquema inicial com:
+- [x] Criar banco PostgreSQL via Docker
+- [x] Adicionar `prisma` para migrations e ORM
+- [x] Inicializar Prisma com `npx prisma init`
+- [x] Criar esquema inicial com:
   ```
-    `User`
-    `Account` (corrente/investimento)
-    `Transaction`
-    `Asset`
-    `Investment`
+    User
+    Account (corrente/investimento)
+    Transaction
+    Asset
+    Investment
   ```
-- [ ]   Criar script de `seed` com base nos mocks fornecidos
-- [ ]   Testar criação e seed com `npx prisma db push` e `npx ts-node prisma/seed`
+- [x] Criar script de `seed` com base nos mocks fornecidos
+- [x] Testar criação e seed com `npx prisma migrate dev` e `npm run seed`
 
 ## 4. Docker
 
-- [ ]   Criar `Dockerfile` para o backend
-- [ ]   Criar `docker-compose.yml` com serviços:
+- [x] Criar `Dockerfile` para o backend
+- [x] Criar `docker-compose.yml` com serviços:
 ```
     - app (Node.js)
     - db (PostgreSQL)
 ```
-- [ ]   Configurar `DATABASE_URL` via `.env`
-- [ ]   Testar aplicação rodando com `docker-compose up --build`
-- [ ]   Adicionar instruções no `README.md`
+- [x] Configurar `DATABASE_URL` via `.env`
+- [x] Testar aplicação rodando com `docker-compose up --build`
+- [x] Adicionar instruções no `README.md`
 
 ## 5. Funcionalidades Backend
 
-- [ ]   Criar endpoints públicos:
+- [ ] Criar endpoints públicos:
 ```
     - Cadastro de usuário
     - Login com JWT
 ```
-- [ ]   Criar middlewares de autenticação
-- [ ]   Implementar:
+- [ ] Criar middlewares de autenticação
+- [ ] Implementar:
 ```
     - Consulta de saldo (corrente e investimento)
     - Depósito em conta corrente
@@ -79,28 +82,28 @@
 
 ## 6. Regras de Negócio
 
-- [ ]   Criar serviços isolados para validações e cálculos:
+- [ ] Criar serviços isolados para validações e cálculos:
 ```
     - Validação de transferências
     - Cálculo de taxa e tributo
     - Verificação de pendências em contas
 ```
-- [ ]   Separar essas regras da camada de persistência
-- [ ]   Checar o atendimento de todas as [Regras de negócio](./regradenegocio.md)
+- [ ] Separar essas regras da camada de persistência
+- [ ] Checar o atendimento de todas as [Regras de negócio](./regradenegocio.md)
 
 ## 7. Documentação e Testes
 
-- [ ]   Configurar Swagger com `swagger-ui-express`
-- [ ]   Criar endpoints no Postman e exportar collection
-- [ ]   Criar testes unitários com Jest para regras de negócio
-- [ ]   Criar testes de integração com Supertest
+- [ ] Configurar Swagger com `swagger-ui-express`
+- [ ] Criar endpoints no Postman e exportar collection
+- [ ] Criar testes unitários com Jest para regras de negócio
+- [ ] Criar testes de integração com Supertest
 
 ## 8. Frontend Vue
 
-- [ ]   Criar projeto com Vite + Vue.js
-- [ ]   Configurar Pinia, Vue Router
-- [ ]   Criar layout com CSS puro e variáveis :root
-- [ ]   Criar telas:
+- [ ] Criar projeto com Vite + Vue.js
+- [ ] Configurar Pinia, Vue Router
+- [ ] Criar layout com CSS puro e variáveis :root
+- [ ] Criar telas:
 ```
     - Login
     - Dashboard
@@ -110,19 +113,18 @@
     - Investimento
     - Relatórios
 ```
-- [ ]   Conectar à API via Axios
-
+- [ ] Conectar à API via Axios
 
 ## 9. Extras (se houver tempo)
 
-- [ ]   Simulador de mercado com variação de preços de ações
-- [ ]   Alertas de vencimento e variações expressivas
-- [ ]   Sistema de badges por ações ou conquistas
+- [ ] Simulador de mercado com variação de preços de ações
+- [ ] Alertas de vencimento e variações expressivas
+- [ ] Sistema de badges por ações ou conquistas
 
 ## 10. Finalização
 
-- [ ]   Gerar `README.md` completo
-- [ ]   Gerar diagrama Mermaid da arquitetura
-- [ ]   Gravar vídeo de demonstração ou tirar prints
-- [ ]   Subir versão final para a branch `main`
-- [ ]   Garantir que projeto esteja rodando via Docker
+- [ ] Gerar `README.md` completo
+- [ ] Gerar diagrama Mermaid da arquitetura
+- [ ] Gravar vídeo de demonstração ou tirar prints
+- [ ] Subir versão final para a branch `main`
+- [x] Garantir que projeto esteja rodando via Docker

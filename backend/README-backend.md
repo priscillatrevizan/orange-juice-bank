@@ -25,31 +25,27 @@ Utilizamos uma **arquitetura limpa e modular**, com separação clara entre dom�
     │   │       │   ├── users.service.js
     │   │       │   └── users.model.js
     │   │       └── index.js    # Agregador de rotas da v1
-    │   │
     │   ├── /config             # Arquivos de configuração
-    │   │   ├── index.js
-    │   │   └── database.js
-    │   │
-    │   ├── /middlewares        # Middlewares customizados (ex: autenticação)
-    │   │   └── auth.middleware.js
-    │   │
-    │   ├── /models             # Modelos de dados (ex: Mongoose, Sequelize)
-    │   │
+    │   ├── /middlewares        # Middlewares customizados
+    │   ├── /models             # Modelos de dados
     │   ├── /services           # Lógica de negócio
-    │   │
     │   ├── /utils              # Funções utilitárias
-    │   │   └── logger.js
-    │   │
-    │   ├── app.js              # Configurações do Express e middlewares
+    │   ├── app.js              # Configuração global do Express
     │   └── server.js           # Ponto de entrada do servidor
-    │
-    ├── /tests                  # Testes da aplicação
-    │   ├── /integration        # Testes de integração
-    │   └── /unit               # Testes unitários
-    |
-    ├── .env                    # Variáveis de ambiente
-    ├── .eslintrc.json          # Configuração do ESLint
-    ├── .gitignore              # Arquivos ignorados pelo Git
+    ├── /tests                  # Testes automatizados
+    │   ├── /integration
+    │   └── /unit
+    ├── /prisma                # Schema, client e seed do Prisma
+    │   ├── schema.prisma
+    │   ├── seed.js
+    │   └── seed-data/
+    │       ├── users-mock.json
+    │       └── assets-mock.json
+    ├── Dockerfile
+    ├── docker-compose.yml
+    ├── .dockerignore
+    ├── .env
+    ├── .gitignore
     ├── package.json
     └── README.md
 ```
@@ -60,7 +56,6 @@ Utilizamos uma **arquitetura limpa e modular**, com separação clara entre dom�
 - **PostgreSQL** é confiável para consistência em operações bancárias simuladas.
 - **Prisma** acelera o desenvolvimento de queries com tipagem automática, e facilita a manutenção dos dados.
 - **Arquitetura limpa** foi adotada para separar as responsabilidades e permitir testes isolados e manutenção escalável.
-
 
 ## Princípios SOLID
 
@@ -74,5 +69,33 @@ O backend foi planejado de acordo com os princípios SOLID para garantir maior o
 
 O uso desses princípios reforça a separação entre camadas e proporciona clareza no fluxo de regras de negócio, o que é essencial em um domínio financeiro como este.
 
+## Executando com Docker
 
+Siga os passos abaixo para rodar o backend em qualquer máquina com Docker instalado:
 
+1. Clone este repositório:
+   ```bash
+   git clone https://github.com/seu-usuario/orangejuicebank.git
+   cd orangejuicebank/backend
+   ```
+
+2. Crie o arquivo `.env`:
+   ```bash
+   DATABASE_URL="postgresql://postgres:Orange2025@db:5432/orangejuicebank"
+   PORT=3000
+   ```
+
+3. Construa e inicie os containers:
+   ```bash
+   docker-compose up --build
+   ```
+
+4. Acesse a API no navegador ou via terminal:
+   ```bash
+   http://localhost:3000
+   ```
+
+5. (Opcional) Execute o seed manualmente se desejar repopular o banco:
+   ```bash
+   docker exec -it orangejuicebank-backend npm run seed
+   
