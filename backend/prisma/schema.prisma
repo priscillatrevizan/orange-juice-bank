@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  cpf       String   @unique
+  birthDate DateTime
+  createdAt DateTime @default(now())
+}
+
+model Stock {
+  id             Int      @id @default(autoincrement())
+  symbol         String   @unique
+  name           String
+  sector         String
+  currentPrice   Float
+  dailyVariation Float
+  createdAt      DateTime @default(now())
+}
+
+model FixedIncome {
+  id                String   @id                 // ex: CDB001
+  name              String
+  type              String                       // CDB ou Tesouro Direto
+  rate              Float
+  rateType          String                       // "pre" ou "pos"
+  maturity          DateTime
+  minimumInvestment Float
+  createdAt         DateTime   @default(now())
+}
