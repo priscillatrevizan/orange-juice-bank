@@ -1,13 +1,15 @@
-const userService = require('./users.service');
+const usersService = require('./users.service');
 
-const registerUser = (req, res) => {
-  const { name, email, password } = req.body;
-  if (!name || !email || !password) {
-    return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
+async function createUser(req, res) {
+  try {
+    const newUser = await usersService.create(req.body);
+    return res.status(201).json(newUser);
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
   }
+}
 
-  const user = userService.createUser({ name, email, password });
-  res.status(201).json(user);
+module.exports = {
+  createUser,
 };
 
-module.exports = { registerUser };

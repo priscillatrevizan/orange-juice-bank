@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('./users.controller');
+const usersController = require('./users.controller');
+const validateUserPayload = require('../../../middlewares/validateUserPayload');
 
-router.post('/register', userController.registerUser);
-router.get('/', (req, res) => {
-  res.send('Rota de usuários está funcionando!');
-});
+router.post('/', validateUserPayload, usersController.createUser);
 
 module.exports = router;
+

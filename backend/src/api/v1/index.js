@@ -2,12 +2,11 @@ const express = require('express');
 const router = express.Router();
 
 const userRoutes = require('./users/users.routes');
-router.use('/users', userRoutes); // GET /api/v1/users
-
 const assetsRoutes = require('./assets/assets.routes');
-router.use('/assets', assetsRoutes); // GET /api/v1/assets
-
 const authRoutes = require('./auth/auth.routes');
-router.use('/auth', authRoutes); // POST /api/v1/auth/login
+
+router.use('/users', userRoutes);     // POST /users, GET /users
+router.use('/assets', assetsRoutes);  // GET /assets
+router.use('/auth', authRoutes);      // POST /auth/login
 
 module.exports = router;
