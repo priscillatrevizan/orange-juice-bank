@@ -24,6 +24,12 @@ async function create(data) {
   });
 }
 
+
+async function getAll() {
+  return await prisma.user.findMany();
+}
+
 module.exports = {
   create,
+  getAll,
 };
