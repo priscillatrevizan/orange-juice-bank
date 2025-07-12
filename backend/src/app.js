@@ -1,9 +1,12 @@
 const express = require('express');
 const app = express();
-const apiV1Routes = require('./api/v1');
+const cors = require('cors');
 
-app.use(express.json()); // necessário para `req.body`
-app.use('/api/v1', apiV1Routes);
+const v1Routes = require('./api/v1');
+
+app.use(cors());
+app.use(express.json());
+
+app.use('/api/v1', v1Routes); // <- aqui define o prefixo para todas as rotas da versão
 
 module.exports = app;
-
