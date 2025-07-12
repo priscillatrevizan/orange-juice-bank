@@ -13,9 +13,9 @@ async function login(email, cpf) {
     throw new Error('Credenciais inválidas');
   }
 
-  const token = jwt.sign({ userId: user.id }, JWT_SECRET, {
-    expiresIn: '1h',
-  });
+const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
+  expiresIn: '1h'
+});
 
   return token;
 }

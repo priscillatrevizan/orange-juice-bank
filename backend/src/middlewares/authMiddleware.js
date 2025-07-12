@@ -1,19 +1,26 @@
 const jwt = require('jsonwebtoken');
+const secret = process.env.JWT_SECRET;
 
-module.exports = function authMiddleware(req, res, next) {
+function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (!authHeader) {
     return res.status(401).json({ message: 'Token não fornecido.' });
   }
 
-  const token = authHeader.split(' ')[1];
+  const [type, token] = authHeader.split(' ');
+
+  if (type !== 'Bearer' || !token) {
+    return res.status(401).json({ message: 'Token malformado.' });
+  }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'segredo-padrao');
-    req.user = decoded; // opcional: salva dados no req.user
-    next();
+    const decoded = jwt.verify(token, secret);
+    req.user = decoded; // define `req.user` com o payload do token
+    return next();
   } catch (err) {
-    return res.status(403).json({ message: 'Token inválido.' });
+    return res.status(401).json({ message: 'Token inválido.' });
   }
-};
+}
+
+module.exports = authMiddleware;

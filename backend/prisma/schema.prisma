@@ -8,22 +8,27 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  cpf       String   @unique
-  birthDate DateTime
-  createdAt DateTime @default(now())
+  id            Int           @id @default(autoincrement())
+  name          String
+  email         String        @unique
+  cpf           String        @unique
+  birthDate     DateTime
+  createdAt     DateTime      @default(now())
+
+  transactions  Transaction[] 
 }
 
+
 model Stock {
-  id             Int      @id @default(autoincrement())
-  symbol         String   @unique
+  id             Int           @id @default(autoincrement())
+  symbol         String        @unique
   name           String
   sector         String
   currentPrice   Float
   dailyVariation Float
-  createdAt      DateTime @default(now())
+  createdAt      DateTime      @default(now())
+
+  transactions   Transaction[] 
 }
 
 model FixedIncome {
@@ -35,4 +40,23 @@ model FixedIncome {
   maturity          DateTime
   minimumInvestment Float
   createdAt         DateTime   @default(now())
+
+  transactions      Transaction[]
+}
+
+model Transaction {
+  id              Int       @id @default(autoincrement())
+  user            User      @relation(fields: [userId], references: [id])
+  userId          Int
+
+  // O ativo pode ser uma ação (Stock) ou renda fixa (FixedIncome)
+  stock           Stock?    @relation(fields: [stockId], references: [id])
+  stockId         Int?
+
+  fixedIncome     FixedIncome? @relation(fields: [fixedIncomeId], references: [id])
+  fixedIncomeId   String?
+
+  type            String    // 'buy' (por enquanto)
+  amount          Int       // quantidade de cotas ou fração investida
+  createdAt       DateTime  @default(now())
 }
