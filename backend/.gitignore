@@ -25,3 +25,5 @@ Thumbs.db
 
 # Logs de testes
 test-results.xml
+
+/src/generated/prisma
