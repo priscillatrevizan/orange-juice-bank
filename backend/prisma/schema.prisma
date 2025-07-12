@@ -17,6 +17,7 @@ model User {
 
   transactions  Transaction[]
   accounts      Account[]
+  movements     Movement[]
  
 }
 
@@ -74,7 +75,26 @@ model Account {
   @@unique([userId, type])
 
   // Relacionamento futuro com movimentações e transferências
-  // movimentacoesEnviadas     Movimentacao[] @relation("ContaOrigem")
-  // movimentacoesRecebidas    Movimentacao[] @relation("ContaDestino")
+  movimentacoesEnviadas     Movement[] @relation("ContaOrigem")
+  movimentacoesRecebidas    Movement[] @relation("ContaDestino")
+}
+
+model Movement {
+  id              Int       @id @default(autoincrement())
+  tipo            String    // 'deposito' | 'saque' | 'transferencia_interna' | 'transferencia_externa' | 'compra' | 'venda'
+  valor           Float
+  data            DateTime  @default(now())
+
+  contaOrigem     Account?  @relation("ContaOrigem", fields: [contaOrigemId], references: [id])
+  contaOrigemId   Int?
+
+  contaDestino    Account?  @relation("ContaDestino", fields: [contaDestinoId], references: [id])
+  contaDestinoId  Int?
+
+  descricao       String?
+
+  // Futuro: link com transação de ativo
+  user            User      @relation(fields: [userId], references: [id])
+  userId          Int
 }
 
