@@ -63,7 +63,7 @@ async function realizarTransferencia({ userId, contaOrigemId, contaDestinoId, va
       data: { balance: { increment: valor } },
     });
 
-    return await prisma.movimentacao.create({
+    return await prisma.movement.create({
       data: {
         tipo,
         valor,
@@ -78,54 +78,15 @@ async function realizarTransferencia({ userId, contaOrigemId, contaDestinoId, va
   throw new Error('Tipo de transferência inválido.');
 }
 
-const comprarAcoes = async ({ userId, contaInvestimentoId, stockId, quantidade }) => {
-  if (!quantidade || quantidade <= 0) throw new Error('Quantidade inválida.');
-  if (!stockId) throw new Error('ID do ativo não informado.');
 
-  const conta = await prisma.account.findUnique({ where: { id: contaInvestimentoId } });
-  if (!conta || conta.type !== 'investimento') throw new Error('Conta de investimento não encontrada.');
+// Funções wrapper para transferências interna e externa
+async function realizarTransferenciaInterna({ userId, contaOrigemId, contaDestinoId, valor }) {
+  return realizarTransferencia({ userId, contaOrigemId, contaDestinoId, valor, tipo: 'transferencia_interna' });
+}
 
-  const stock = await prisma.stock.findUnique({ where: { id: stockId } });
-  if (!stock) throw new Error('Ativo não encontrado.');
-
-  const precoUnitario = stock.precoAtual || stock.preco || 0;
-  const totalCompra = precoUnitario * quantidade;
-  const taxaCorretagem = totalCompra * 0.01;
-  const valorFinal = totalCompra + taxaCorretagem;
-
-  if (conta.balance < valorFinal) throw new Error('Saldo insuficiente na conta de investimento.');
-
-  // Debita valor total (compra + taxa)
-  await prisma.account.update({
-    where: { id: contaInvestimentoId },
-    data: { balance: { decrement: valorFinal } },
-  });
-
-  // Registra transação
-  const transacao = await prisma.transaction.create({
-    data: {
-      userId,
-      stockId,
-      fixedIncomeId: null,
-      type: 'buy',
-      amount: quantidade,
-    },
-  });
-
-  // Registra movimentação
-  await prisma.movement.create({
-    data: {
-      userId,
-      contaOrigemId: contaInvestimentoId,
-      contaDestinoId: null,
-      tipo: 'compra_acao',
-      valor: valorFinal,
-      descricao: `Compra de ${quantidade}x ${stock.nome} com corretagem de 1%`,
-    },
-  });
-
-  return transacao;
-};
+async function realizarTransferenciaExterna({ userId, contaOrigemId, contaDestinoId, valor }) {
+  return realizarTransferencia({ userId, contaOrigemId, contaDestinoId, valor, tipo: 'transferencia_externa' });
+}
 
 
-module.exports = { realizarTransferencia };
+module.exports = { realizarTransferencia, realizarTransferenciaInterna, realizarTransferenciaExterna };
