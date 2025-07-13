@@ -8,22 +8,30 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  cpf       String   @unique
-  birthDate DateTime
-  createdAt DateTime @default(now())
+  id            Int           @id @default(autoincrement())
+  name          String
+  email         String        @unique
+  cpf           String        @unique
+  birthDate     DateTime
+  createdAt     DateTime      @default(now())
+
+  transactions  Transaction[]
+  accounts      Account[]
+  movements     Movement[]
+ 
 }
 
+
 model Stock {
-  id             Int      @id @default(autoincrement())
-  symbol         String   @unique
+  id             Int           @id @default(autoincrement())
+  symbol         String        @unique
   name           String
   sector         String
   currentPrice   Float
   dailyVariation Float
-  createdAt      DateTime @default(now())
+  createdAt      DateTime      @default(now())
+
+  transactions   Transaction[] 
 }
 
 model FixedIncome {
@@ -35,4 +43,58 @@ model FixedIncome {
   maturity          DateTime
   minimumInvestment Float
   createdAt         DateTime   @default(now())
+
+  transactions      Transaction[]
 }
+
+model Transaction {
+  id              Int       @id @default(autoincrement())
+  user            User      @relation(fields: [userId], references: [id])
+  userId          Int
+
+  // O ativo pode ser uma ação (Stock) ou renda fixa (FixedIncome)
+  stock           Stock?    @relation(fields: [stockId], references: [id])
+  stockId         Int?
+
+  fixedIncome     FixedIncome? @relation(fields: [fixedIncomeId], references: [id])
+  fixedIncomeId   String?
+
+  type            String    // 'buy' (por enquanto)
+  amount          Int       // quantidade de cotas ou fração investida
+  createdAt       DateTime  @default(now())
+}
+
+model Account {
+  id        Int       @id @default(autoincrement())
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int
+  type      String    // 'corrente' ou 'investimento'
+  balance   Float     @default(0)
+  createdAt DateTime  @default(now())
+
+  @@unique([userId, type])
+
+  // Relacionamento futuro com movimentações e transferências
+  movimentacoesEnviadas     Movement[] @relation("ContaOrigem")
+  movimentacoesRecebidas    Movement[] @relation("ContaDestino")
+}
+
+model Movement {
+  id              Int       @id @default(autoincrement())
+  tipo            String    // 'deposito' | 'saque' | 'transferencia_interna' | 'transferencia_externa' | 'compra' | 'venda'
+  valor           Float
+  data            DateTime  @default(now())
+
+  contaOrigem     Account?  @relation("ContaOrigem", fields: [contaOrigemId], references: [id])
+  contaOrigemId   Int?
+
+  contaDestino    Account?  @relation("ContaDestino", fields: [contaDestinoId], references: [id])
+  contaDestinoId  Int?
+
+  descricao       String?
+
+  // Futuro: link com transação de ativo
+  user            User      @relation(fields: [userId], references: [id])
+  userId          Int
+}
+
