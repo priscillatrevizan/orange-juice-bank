@@ -1,14 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const { createTransaction, getUserTransactions, getUserExtrato, buyStock, sellStock } = require('./transactions.controller');
+const { createTransaction, getUserTransactions, getUserExtrato, buyStock, sellStock, sellFixedIncome } = require('./transactions.controller');
 const authMiddleware = require('../../../middlewares/authMiddleware');
 
 
-
-router.get('/extrato', authMiddleware, getUserExtrato);
+// Compra
 router.post('/buy', authMiddleware, createTransaction);
 router.post('/buy-stock', authMiddleware, buyStock);
+
+// Venda
 router.post('/sell-stock', authMiddleware, sellStock);
+router.post('/sell-fixed-income', authMiddleware, sellFixedIncome);
+
+// Consultas
+router.get('/statement', authMiddleware, getUserExtrato);
 router.get('/', authMiddleware, getUserTransactions);
 
 module.exports = router;

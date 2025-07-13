@@ -22,7 +22,8 @@ const {
   listUserTransactions, 
   listExtrato, 
   comprarAcoes, 
-  venderAcoes 
+  venderAcoes, 
+  venderRendaFixa 
 } = require('./transactions.service');
 
 async function createTransaction(req, res) {
@@ -88,11 +89,24 @@ async function sellStock(req, res) {
   }
 }
 
+async function sellFixedIncome(req, res) {
+  try {
+    const userId = req.user.id;
+    const { contaInvestimentoId, fixedIncomeId, quantidade } = req.body;
+
+    const result = await venderRendaFixa({ userId, contaInvestimentoId, fixedIncomeId, quantidade });
+    return res.status(201).json(result);
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+}
+
 
 module.exports = {
   createTransaction,
   getUserTransactions,
   getUserExtrato,
   buyStock,
-  sellStock
+  sellStock,
+  sellFixedIncome
 };
