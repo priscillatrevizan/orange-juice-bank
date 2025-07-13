@@ -1,3 +1,11 @@
+// Buscar todas as contas de um usuário
+async function buscarContasPorUsuario(userId) {
+  if (!userId) throw new Error('userId é obrigatório');
+  return await prisma.account.findMany({
+    where: { userId: Number(userId) },
+    orderBy: { id: 'asc' }
+  });
+}
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -61,5 +69,6 @@ async function sacar({ userId, contaId, valor }) {
 
 module.exports = {
   depositar,
-  sacar
+  sacar,
+  buscarContasPorUsuario
 };

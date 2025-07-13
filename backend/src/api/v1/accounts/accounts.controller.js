@@ -1,4 +1,4 @@
-const { depositar, sacar } = require('./accounts.service');
+const { depositar, sacar, buscarContasPorUsuario } = require('./accounts.service');
 
 async function depositarConta(req, res) {
   try {
@@ -24,7 +24,22 @@ async function sacarConta(req, res) {
   }
 }
 
+// Buscar todas as contas de um usuário
+async function getContasByUser(req, res) {
+  try {
+    const { userId } = req.params;
+    const contas = await buscarContasPorUsuario(userId);
+    if (!contas || contas.length === 0) {
+      return res.status(404).json({ error: 'Nenhuma conta encontrada para este usuário.' });
+    }
+    return res.status(200).json(contas);
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+}
+
 module.exports = {
   depositarConta,
-  sacarConta
+  sacarConta,
+  getContasByUser
 };
