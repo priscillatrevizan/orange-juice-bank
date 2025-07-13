@@ -60,43 +60,55 @@
 - [x] Testar aplicação rodando com `docker-compose up --build`
 - [x] Adicionar instruções no `README.md`
 
-## 5. Funcionalidades Backend
+## 5. 5. Funcionalidades Backend
 
-- [ ] Criar endpoints públicos:
-```
-    - Cadastro de usuário
-    - Login com JWT
-```
-- [ ] Criar middlewares de autenticação
-- [ ] Implementar:
-```
-    - Consulta de saldo (corrente e investimento)
-    - Depósito em conta corrente
-    - Saque da conta corrente
-    - Transferência interna entre contas
-    - Transferência externa (com taxa)
-    - Registro de movimentações
-    - Compra e venda de ativos
-    - Cálculo de taxas e impostos
-```
+### Endpoints públicos
+- [x] Cadastro de usuário
+- [x] Login com JWT
+
+### Middlewares
+- [x] Autenticação via token com `authMiddleware.js`
+
+### Funcionalidades implementadas
+- [x] Consulta de saldo (corrente e investimento)
+- [x] Transferência interna entre contas do mesmo usuário
+- [x] Transferência externa entre usuários (com taxa de 0.5%)
+- [x] Registro de movimentações (compra, venda, transferência, saque e depósito)
+- [x] Compra de ações e renda fixa (com taxa de 1% para ações)
+- [x] Venda de ações e renda fixa (com IR: 15% ações, 22% renda fixa)
+- [x] Endpoint de extrato unificado com filtro por tipo, data e conta
+- [x] Depósito em conta corrente
+- [x] Saque da conta corrente
+
+---
 
 ## 6. Regras de Negócio
 
-- [ ] Criar serviços isolados para validações e cálculos:
-```
-    - Validação de transferências
-    - Cálculo de taxa e tributo
-    - Verificação de pendências em contas
-```
-- [ ] Separar essas regras da camada de persistência
-- [ ] Checar o atendimento de todas as [Regras de negócio](./regradenegocio.md)
+- [x] Serviços separados por tipo de movimentação (buy, sell, transfer)
+- [x] Verificação de saldo antes de toda movimentação
+- [x] Impedimento de operações com valor inválido ou contas iguais
+- [x] Criação automática de contas ao criar usuário
+- [x] Validação de tipo de ativo (não pode comprar ação e renda fixa juntas)
+- [x] Restrições nas transferências externas (somente conta corrente)
+- [ ] Serviços isolados de validação/taxas ainda estão acoplados a service principal (refatorar se houver tempo)
+- [ ] Verificação de pendências (não aplicável por enquanto)
+
+---
+
+## Status Geral do Backend
+
+- [x] Fluxo de autenticação completo
+- [x] Operações financeiras testadas e funcionais
+- [x] Respostas com status HTTP apropriados
+- [x] Organização por rotas, controllers e services
+- [x] Documentação da API será feita via Postman (Swagger não será utilizado)
+- [x] Testes automatizados em andamento
 
 ## 7. Documentação e Testes
 
-- [ ] Configurar Swagger com `swagger-ui-express`
-- [ ] Criar endpoints no Postman e exportar collection
-- [ ] Criar testes unitários com Jest para regras de negócio
-- [ ] Criar testes de integração com Supertest
+- [x] Documentar e testar endpoints no Postman (Swagger não será utilizado)
+- [x] Criar testes unitários com Jest para regras de negócio
+- [x] Criar testes de integração com Supertest
 
 ## 8. Frontend Vue
 
