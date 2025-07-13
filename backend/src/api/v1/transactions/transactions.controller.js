@@ -17,7 +17,30 @@ async function createTransaction(req, res) {
   }
 }
 
-const { handleBuyTransaction, listUserTransactions } = require('./transactions.service');
+const { 
+  handleBuyTransaction, 
+  listUserTransactions, 
+  listExtrato, 
+  comprarAcoes, 
+  venderAcoes 
+} = require('./transactions.service');
+
+async function createTransaction(req, res) {
+  try {
+    const userId = req.user.id;
+    const { stockId, fixedIncomeId, amount, type } = req.body;
+
+    if (!type || type !== 'buy') {
+      return res.status(400).json({ error: 'Tipo de transação inválido' });
+    }
+
+    const transaction = await handleBuyTransaction({ userId, stockId, fixedIncomeId, amount, type });
+
+    return res.status(201).json(transaction);
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+}
 
 async function getUserTransactions(req, res) {
   try {
@@ -28,8 +51,6 @@ async function getUserTransactions(req, res) {
     return res.status(400).json({ error: err.message });
   }
 }
-
-const { listExtrato } = require('./transactions.service');
 
 async function getUserExtrato(req, res) {
   try {
@@ -43,9 +64,35 @@ async function getUserExtrato(req, res) {
   }
 }
 
+async function buyStock(req, res) {
+  try {
+    const userId = req.user.id;
+    const { contaInvestimentoId, stockId, quantidade } = req.body;
+
+    const result = await comprarAcoes({ userId, contaInvestimentoId, stockId, quantidade });
+    return res.status(201).json(result);
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+}
+
+async function sellStock(req, res) {
+  try {
+    const userId = req.user.id;
+    const { contaInvestimentoId, stockId, quantidade } = req.body;
+
+    const result = await venderAcoes({ userId, contaInvestimentoId, stockId, quantidade });
+    return res.status(201).json(result);
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+}
+
+
 module.exports = {
   createTransaction,
   getUserTransactions,
-  getUserExtrato
+  getUserExtrato,
+  buyStock,
+  sellStock
 };
-
