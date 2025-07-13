@@ -18,6 +18,21 @@ async function realizarTransferencia({ userId, contaOrigemId, contaDestinoId, va
     if (!mesmaPessoa) throw new Error('Transferência interna deve ser entre contas do mesmo usuário.');
     if (contaOrigem.balance < valor) throw new Error('Saldo insuficiente na conta de origem.');
 
+    // Validação: se for de investimento para corrente, checar pendências
+    if (contaOrigem.type === 'investimento' && contaDestino.type === 'corrente') {
+      // Busca por movimentações do tipo compra ou venda com status pendente
+      const pendencias = await prisma.movement.findFirst({
+        where: {
+          userId,
+          tipo: { in: ['compra', 'venda'] },
+          // status: 'pendente' // descomente se existir campo status
+        },
+      });
+      if (pendencias) {
+        throw new Error('Não é possível transferir: existem operações pendentes de compra ou venda de ativos.');
+      }
+    }
+
     // Debita e credita
     await prisma.account.update({
       where: { id: contaOrigemId },
