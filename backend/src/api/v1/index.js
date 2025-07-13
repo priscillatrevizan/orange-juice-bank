@@ -6,6 +6,10 @@ const assetsRoutes = require('./assets/assets.routes');
 const authRoutes = require('./auth/auth.routes');
 const transactionsRoutes = require('./transactions/transactions.routes');
 const transfersRoutes = require('./transfers/transfers.routes');
+const accountsRoutes = require('./accounts/accounts.routes');
+
+
+router.use('/accounts', accountsRoutes); // POST /accounts/deposit, POST /accounts/withdraw
 
 router.use('/users', userRoutes);     // POST /users, GET /users
 router.use('/assets', assetsRoutes);  // GET /assets
