@@ -1,15 +1,12 @@
 const express = require('express');
+const app = express();
 const cors = require('cors');
 
-const app = express();
+const v1Routes = require('./api/v1');
 
-// Middlewares globais
 app.use(cors());
 app.use(express.json());
 
-// Rotas base de teste
-app.get('/', (req, res) => {
-  res.send('OrangeJuiceBank API rodando!');
-});
+app.use('/api/v1', v1Routes); // <- aqui define o prefixo para todas as rotas da versão
 
 module.exports = app;

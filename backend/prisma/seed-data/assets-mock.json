@@ -1,6 +1,7 @@
 {
   "stocks": [
     {
+      "id": 1,
       "symbol": "BOIB3",
       "name": "Boi Bom",
       "sector": "Agro",
@@ -8,6 +9,7 @@
       "dailyVariation": 1.2
     },
     {
+      "id": 2,
       "symbol": "BOIN3",
       "name": "Boi Nobre",
       "sector": "Agro",
@@ -15,6 +17,7 @@
       "dailyVariation": -0.8
     },
     {
+      "id": 3,
       "symbol": "AGUA3",
       "name": "Água pra Todos",
       "sector": "Serviços",
@@ -22,6 +25,7 @@
       "dailyVariation": 2.1
     },
     {
+      "id": 4,
       "symbol": "ENER3",
       "name": "Energia BR",
       "sector": "Serviços",
@@ -29,6 +33,7 @@
       "dailyVariation": 0.5
     },
     {
+      "id": 5,
       "symbol": "NUV3",
       "name": "NuvemCinza",
       "sector": "Tecnologia",
@@ -36,6 +41,7 @@
       "dailyVariation": 3.2
     },
     {
+      "id": 6,
       "symbol": "CHIP3",
       "name": "ChipZilla",
       "sector": "Tecnologia",
@@ -43,6 +49,7 @@
       "dailyVariation": -1.5
     },
     {
+      "id": 7,
       "symbol": "SOJA3",
       "name": "Soja Brasil",
       "sector": "Agro",
@@ -50,6 +57,7 @@
       "dailyVariation": 0.8
     },
     {
+      "id": 8,
       "symbol": "CAFE3",
       "name": "Café Premium",
       "sector": "Agro",
@@ -57,6 +65,7 @@
       "dailyVariation": -0.3
     },
     {
+      "id": 9,
       "symbol": "LIXO3",
       "name": "Limpa Cidade",
       "sector": "Serviços",
@@ -64,6 +73,7 @@
       "dailyVariation": 1.0
     },
     {
+      "id": 10,
       "symbol": "GAS3",
       "name": "Gás Natural",
       "sector": "Serviços",
@@ -71,6 +81,7 @@
       "dailyVariation": -0.5
     },
     {
+      "id": 11,
       "symbol": "SOFT3",
       "name": "SoftTech",
       "sector": "Tecnologia",
@@ -78,6 +89,7 @@
       "dailyVariation": 2.3
     },
     {
+      "id": 12,
       "symbol": "DADOS3",
       "name": "Dados Brasil",
       "sector": "Tecnologia",
@@ -85,6 +97,7 @@
       "dailyVariation": -1.2
     },
     {
+      "id": 13,
       "symbol": "MILH3",
       "name": "Milho Brasil",
       "sector": "Agro",
@@ -92,6 +105,7 @@
       "dailyVariation": 0.4
     },
     {
+      "id": 14,
       "symbol": "CANAA3",
       "name": "Cana Açúcar",
       "sector": "Agro",
@@ -99,6 +113,7 @@
       "dailyVariation": -0.7
     },
     {
+      "id": 15,
       "symbol": "LIMP3",
       "name": "Limpeza Total",
       "sector": "Serviços",
@@ -106,6 +121,7 @@
       "dailyVariation": 0.9
     },
     {
+      "id": 16,
       "symbol": "TEL3",
       "name": "Telecom Brasil",
       "sector": "Serviços",
@@ -113,6 +129,7 @@
       "dailyVariation": -0.2
     },
     {
+      "id": 17,
       "symbol": "INT3",
       "name": "Internet BR",
       "sector": "Tecnologia",
@@ -120,6 +137,7 @@
       "dailyVariation": 1.8
     },
     {
+      "id": 18,
       "symbol": "SEG3",
       "name": "Segurança Digital",
       "sector": "Tecnologia",
@@ -127,6 +145,7 @@
       "dailyVariation": -0.9
     },
     {
+      "id": 19,
       "symbol": "FRUT3",
       "name": "Frutas Brasil",
       "sector": "Agro",
@@ -134,6 +153,7 @@
       "dailyVariation": 0.6
     },
     {
+      "id": 20,
       "symbol": "HORT3",
       "name": "Hortaliças BR",
       "sector": "Agro",
@@ -141,6 +161,7 @@
       "dailyVariation": -0.4
     },
     {
+      "id": 21,
       "symbol": "TRANS3",
       "name": "Transporte BR",
       "sector": "Serviços",
@@ -148,13 +169,15 @@
       "dailyVariation": 1.1
     },
     {
+      "id": 22,
       "symbol": "LOG3",
       "name": "Logística BR",
       "sector": "Serviços",
       "currentPrice": 29.70,
       "dailyVariation": -0.6
     },
-    {
+    {      
+      "id": 23,
       "symbol": "MOB3",
       "name": "Mobilidade BR",
       "sector": "Tecnologia",
@@ -162,6 +185,7 @@
       "dailyVariation": 2.0
     },
     {
+      "id": 24,
       "symbol": "APP3",
       "name": "Aplicativos BR",
       "sector": "Tecnologia",
@@ -169,6 +193,7 @@
       "dailyVariation": -1.0
     },
     {
+      "id": 25,
       "symbol": "PECU3",
       "name": "Pecuária BR",
       "sector": "Agro",
@@ -176,6 +201,7 @@
       "dailyVariation": 0.7
     },
     {
+      "id": 26,
       "symbol": "PESCA3",
       "name": "Pesca Brasil",
       "sector": "Agro",
@@ -183,6 +209,7 @@
       "dailyVariation": -0.5
     },
     {
+      "id": 27,
       "symbol": "EDUC3",
       "name": "Educação BR",
       "sector": "Serviços",
@@ -190,6 +217,7 @@
       "dailyVariation": 0.8
     },
     {
+      "id": 28,
       "symbol": "SAUDE3",
       "name": "Saúde BR",
       "sector": "Serviços",
@@ -197,6 +225,7 @@
       "dailyVariation": -0.3
     },
     {
+      "id": 29,
       "symbol": "GAME3",
       "name": "Games BR",
       "sector": "Tecnologia",
@@ -204,13 +233,15 @@
       "dailyVariation": 1.5
     },
     {
+      "id": 30,
       "symbol": "REDE3",
       "name": "Redes Sociais",
       "sector": "Tecnologia",
       "currentPrice": 105.30,
       "dailyVariation": -0.8
     },
-    {
+    {      
+      "id": 31,
       "symbol": "FLOR3",
       "name": "Flores BR",
       "sector": "Agro",
@@ -218,6 +249,7 @@
       "dailyVariation": 0.5
     },
     {
+      "id": 32,
       "symbol": "MEL3",
       "name": "Mel Brasil",
       "sector": "Agro",
@@ -225,6 +257,7 @@
       "dailyVariation": -0.4
     },
     {
+      "id": 33,
       "symbol": "TUR3",
       "name": "Turismo BR",
       "sector": "Serviços",
@@ -232,6 +265,7 @@
       "dailyVariation": 0.9
     },
     {
+      "id": 34,
       "symbol": "HOTEL3",
       "name": "Hotéis BR",
       "sector": "Serviços",
@@ -239,6 +273,7 @@
       "dailyVariation": -0.2
     },
     {
+      "id": 35,
       "symbol": "IA3",
       "name": "Inteligência BR",
       "sector": "Tecnologia",
@@ -246,6 +281,7 @@
       "dailyVariation": 2.2
     },
     {
+      "id": 36,
       "symbol": "ROBO3",
       "name": "Robótica BR",
       "sector": "Tecnologia",
@@ -253,6 +289,7 @@
       "dailyVariation": -1.1
     },
     {
+      "id": 37,
       "symbol": "ORGA3",
       "name": "Orgânicos BR",
       "sector": "Agro",
@@ -260,6 +297,7 @@
       "dailyVariation": 0.6
     },
     {
+      "id": 38,
       "symbol": "VEG3",
       "name": "Vegano BR",
       "sector": "Agro",
@@ -267,6 +305,7 @@
       "dailyVariation": -0.3
     },
     {
+      "id": 39,
       "symbol": "CULT3",
       "name": "Cultura BR",
       "sector": "Serviços",
@@ -274,6 +313,7 @@
       "dailyVariation": 0.7
     },
     {
+      "id": 40,
       "symbol": "ESPORT3",
       "name": "Esportes BR",
       "sector": "Serviços",
