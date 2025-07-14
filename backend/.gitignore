@@ -15,7 +15,7 @@ docker-compose.yml
 
 # Prisma
 prisma/dev.db
-prisma/migrations/
+# prisma/migrations/
 prisma/.env
 
 # Sistema
