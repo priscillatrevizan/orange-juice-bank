@@ -12,7 +12,6 @@ services:
     envVars:
       - key: VITE_API_URL
         value: https://orangejuicebank-backend.onrender.com/api/v1
-    plan: free
 
   - type: web
     name: orangejuicebank-backend
@@ -32,10 +31,9 @@ services:
         value: 3000
       - key: JWT_SECRET
         generateValue: true
-    plan: free
 
 databases:
   - name: orangejuicebank-db
     databaseName: orangejuicebank
-    plan: free
     region: ohio
+    plan: free
