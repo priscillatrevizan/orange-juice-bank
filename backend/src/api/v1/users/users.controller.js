@@ -1,3 +1,15 @@
+// Retorna o usuário autenticado
+async function getMe(req, res) {
+  try {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ error: 'Não autenticado' });
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
+    return res.json(user);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
 const usersService = require('./users.service');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
@@ -38,5 +50,6 @@ async function getAllUsers(req, res) {
 module.exports = {
   createUser,
   getAllUsers,
+  getMe,
 };
 
