@@ -5,7 +5,6 @@ services:
     name: orangejuicebank-frontend
     runtime: static
     repo: https://github.com/priscillatrevizan/orange-juice-bank
-    region: ohio
     branch: main
     rootDir: frontend
     buildCommand: npm install && npm run build
