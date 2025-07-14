@@ -1,20 +1,28 @@
-# Exported from Render on 2025-07-14T14:49:24Z
-databases:
-- name: orangejuicebank-db
-  databaseName: orangejuicebank_83ws
-  user: orangejuicebank_83ws_user
-  plan: free
-  region: ohio
-  ipAllowList:
-  - source: 0.0.0.0/0
-    description: everywhere
-  postgresMajorVersion: "16"
 version: "1"
 
-
-databases:
-  - name: orangejuicebank-db
-    databaseName: orangejuicebank
-    plan: free
+services:
+  - type: web
+    name: orangejuicebank-frontend
+    env: docker
+    repo: https://github.com/priscillatrevizan/orange-juice-bank
     region: ohio
+    branch: main
+    rootDir: ./frontend
+    dockerfilePath: ../Dockerfile
+    buildFilter:
+      paths:
+        - frontend/*
+    envVars:
+      - key: VITE_API_URL
+        value: http://orangejuicebank-backend:3000/api/v1
+    plan: free
 
+  - type: web
+    name: orangejuicebank-backend
+    env: docker
+    repo: https://github.com/priscillatrevizan/orange-juice-bank
+    region: ohio
+    branch: main
+    rootDir: ./backend
+    dockerfilePath: ../Dockerfile
+    buildCommand: npm install && npx prisma g
