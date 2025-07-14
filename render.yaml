@@ -39,7 +39,6 @@ services:
 databases:
   - name: orangejuicebank-db
     databaseName: orangejuicebank
-    user: postgres
     plan: free
     region: ohio
 
