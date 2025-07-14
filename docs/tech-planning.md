@@ -77,8 +77,13 @@
 - [x] Compra de ações e renda fixa (com taxa de 1% para ações)
 - [x] Venda de ações e renda fixa (com IR: 15% ações, 22% renda fixa)
 - [x] Endpoint de extrato unificado com filtro por tipo, data e conta
+<<<<<<< Updated upstream
 - [x] Depósito em conta corrente
 - [x] Saque da conta corrente
+=======
+- [ ] Depósito em conta corrente (ainda não implementado)
+- [ ] Saque da conta corrente (ainda não implementado)
+>>>>>>> Stashed changes
 
 ---
 
@@ -104,6 +109,7 @@
 - [x] Documentação da API será feita via Postman (Swagger não será utilizado)
 - [x] Testes automatizados em andamento
 
+
 ## 7. Documentação e Testes
 
 - [x] Documentar e testar endpoints no Postman (Swagger não será utilizado)
@@ -112,10 +118,10 @@
 
 ## 8. Frontend Vue
 
-- [ ] Criar projeto com Vite + Vue.js
-- [ ] Configurar Pinia, Vue Router
-- [ ] Criar layout com CSS puro e variáveis :root
-- [ ] Criar telas:
+- [x] Criar projeto com Vite + Vue.js
+- [x] Configurar Pinia, Vue Router
+- [x] Criar layout com CSS puro e variáveis :root
+- [x] Criar telas:
 ```
     - Login
     - Dashboard
@@ -125,7 +131,7 @@
     - Investimento
     - Relatórios
 ```
-- [ ] Conectar à API via Axios
+- [x] Conectar à API via Axios
 
 ## 9. Extras (se houver tempo)
 
