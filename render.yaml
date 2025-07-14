@@ -24,7 +24,6 @@ services:
     rootDir: ./backend
     dockerfilePath: ../Dockerfile
     buildCommand: npm install && npx prisma generate
-    startCommand: node src/server.js
     autoDeploy: true
     envVars:
       - key: DATABASE_URL
@@ -40,6 +39,7 @@ services:
 databases:
   - name: orangejuicebank-db
     databaseName: orangejuicebank
-    user: postgres
+    user: pguser
     plan: free
     region: ohio
+
