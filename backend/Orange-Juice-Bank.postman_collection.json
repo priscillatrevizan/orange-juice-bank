@@ -1,0 +1,956 @@
+{
+	"info": {
+		"_postman_id": "d43e1ef0-e630-47cd-af41-7cbb092644be",
+		"name": "Orange-Juice-Bank",
+		"description": "StartFragment\n\n## Orange Juice Bank - API REST\n\nEsta coleção reúne todos os endpoints disponíveis na API do **Orange Juice Bank**, uma aplicação de gerenciamento bancário que permite simular operações financeiras completas, como cadastro de usuários, movimentações entre contas, investimentos em renda variável e fixa, e geração de extratos.\n\nA API está estruturada por módulos funcionais, com autenticação via JWT e segregação de operações entre contas correntes e de investimento.\n\n---\n\n### Módulos Disponíveis\n\n#### 1\\. **Users**\n\n- Cadastro de novos usuários\n    \n- Autenticação via e-mail + CPF\n    \n- Listagem de usuários (restrita)\n    \n\n#### 2\\. **Accounts**\n\n- Consulta de contas por usuário autenticado\n    \n- Consulta de contas por `userId`\n    \n- Operações de depósito e saque com validações\n    \n\n#### 3\\. **Assets**\n\n- Consulta de ativos disponíveis:\n    \n    - Ações (stocks)\n        \n    - Renda fixa (títulos públicos)\n        \n    - Fundos de investimento\n        \n- Detalhamento de ativos por tipo e ID\n    \n\n#### 4\\. **Transactions**\n\n- Compra e venda de:\n    \n    - Ações\n        \n    - Títulos de renda fixa\n        \n    - Fundos de investimento\n        \n- Geração de extrato com filtros por período e tipo\n    \n\n#### 5\\. **Transfers**\n\n- Transferência interna entre contas (corrente ↔ investimento)\n    \n- Transferências externas entre usuários\n    \n- Compra e venda de ações via transferência de carteira\n    \n\n---\n\n### Autenticação\n\nA maioria dos endpoints exige autenticação via **token JWT**.  \n  \nUtilize o campo `{{TOKEN}}` como variável do tipo **Authorization: Bearer** para autenticar suas requisições.\n\n---\n\n### Variáveis\n\nA coleção utiliza variáveis padrão para facilitar o uso:\n\n| Variável | Descrição |\n| --- | --- |\n| `{{URL}}` | Base URL da API (ex: [http://localhost:3000](http://localhost:3000)) |\n| `{{TOKEN}}` | Token JWT do usuário autenticado |\n\n---\n\n### Observações\n\n- Todos os endpoints utilizam o padrão RESTful e retornam respostas JSON.\n    \n- Os exemplos de corpo de requisição e resposta estão incluídos nas descrições dos endpoints.\n    \n- Certifique-se de criar um usuário antes de realizar testes com contas ou ativos.\n    \n- A base de dados pode ser populada com dados de seed disponíveis no repositório backend.\n    \n\nEndFragment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27021093"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Cadastrar Usuário",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc1MjM0ODczNiwiZXhwIjoxNzUyMzUyMzM2fQ.a9uV1QFi8QYPSbuj1foTjTe9I1vcQq7JwD0s3MJOlHw",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Alex Durex\",\r\n  \"email\": \"alex2@emailfake.com\",\r\n  \"cpf\": \"22284755566\",\r\n  \"birthDate\": \"1991-01-22\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						},
+						"description": "### Criar Usuário\n\nEste endpoint permite criar um novo usuário no sistema, fornecendo os dados do usuário no corpo da requisição.\n\n#### Requisição\n\n**Método:** `POST`  \n**Endpoint:** `{{URL}}/api/v1/users`\n\n**Corpo da Requisição:**\n\nO corpo da requisição deve ser um objeto JSON contendo os seguintes parâmetros:\n\n- `name` (string): Nome completo do usuário.\n    \n- `email` (string): Endereço de e-mail do usuário.\n    \n- `cpf` (string): Identificador único do usuário, no formato de CPF.\n    \n- `birthDate` (string): Data de nascimento no formato `AAAA-MM-DD`.\n    \n\n#### Resposta\n\n**Código de Status:** `400`  \n**Content-Type:** `application/json`\n\n**Corpo da Resposta:**\n\nEm caso de erro, a resposta retornará um objeto JSON com uma chave `error` indicando o problema encontrado durante a requisição.\n\n#### Observações\n\n- Certifique-se de que todos os campos obrigatórios foram fornecidos e estão corretamente formatados para evitar uma resposta `400 Bad Request`.\n    \n- A mensagem de erro na resposta fornecerá detalhes sobre o que deu errado, portanto, revise-a com atenção caso a requisição falhe."
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"barro123@barrão.com\",\r\n  \"cpf\": \"22288855566\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "### **Endpoint de Login**\n\nEste endpoint é utilizado para autenticar um usuário e obter um token de acesso. Ele permite que os usuários façam login fornecendo suas credenciais, que incluem um e-mail e um CPF (Cadastro de Pessoas Físicas).\n\n---\n\n### **Requisição**\n\n- **Método:** `POST`\n    \n- **URL:** `{{URL}}/api/v1/auth/login`\n    \n\n---\n\n### **Corpo da Requisição**\n\nO corpo da requisição deve estar em formato JSON e incluir os seguintes parâmetros:\n\n- `email` (string): O endereço de e-mail do usuário que está tentando fazer login. **Campo obrigatório**.\n    \n- `cpf` (string): O número do CPF do usuário. **Campo obrigatório**.\n    \n\n**Exemplo de corpo da requisição:**\n\n``` json\n{\n  \"email\": \"user@example.com\",\n  \"cpf\": \"12345678901\"\n}\n\n ```\n\n### **Resposta**\n\nEm caso de autenticação bem-sucedida, o servidor responderá com:\n\n- **Status Code:** `200 OK`\n    \n- **Conteúdo:** Um objeto JSON contendo:\n    \n- `token` (string): Um token que deve ser utilizado nas próximas requisições autenticadas. Este token é essencial para acessar recursos protegidos da API.\n    \n\n**Exemplo de resposta:**\n\n``` json\n{\n  \"token\": \"your_access_token_here\"\n}\n\n ```\n\n### **Observações**\n\n- Verifique se o e-mail e o CPF informados estão corretos e cadastrados no sistema.\n    \n- O token recebido na resposta deve ser armazenado de forma segura e incluído no cabeçalho `Authorization` das requisições futuras à API."
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Usuários",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/api/v1/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						},
+						"description": "Lista todos os usuários cadastrados."
+					},
+					"response": []
+				}
+			],
+			"description": "Responsável pelo cadastro e validação do usuário."
+		},
+		{
+			"name": "Auth",
+			"item": [],
+			"description": "Validações."
+		},
+		{
+			"name": "Assets",
+			"item": [
+				{
+					"name": "Consulta Todas Ações",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/assets",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"assets"
+							]
+						},
+						"description": "### Get Assets (Obter Ativos)\n\nEste endpoint recupera uma lista de ativos do sistema. É uma requisição HTTP GET simples que não requer nenhum parâmetro. O resultado esperado é uma resposta bem-sucedida contendo um array de objetos de ativos, cada um representando um ativo individual com seus respectivos detalhes.\n\n**Resposta Esperada**  \n  \nUma resposta bem-sucedida retornará um array JSON de ativos, cada um contendo informações relevantes como:\n\n- ID do ativo\n    \n- Nome\n    \n- Tipo\n    \n- Status"
+					},
+					"response": []
+				},
+				{
+					"name": "Consulta Renda Fixa Específica",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/assets/stocks/3",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"assets",
+								"stocks",
+								"3"
+							]
+						},
+						"description": "### **Obter Detalhes de uma Ação**\n\n#### **Descrição**\n\nEste endpoint recupera informações detalhadas sobre uma ação específica, identificada por seu ID único.\n\n---\n\n### **Requisição**\n\n- **Método:** `GET`\n    \n- **URL:** `{{URL}}/api/v1/assets/stocks/{id}`\n    \n\n#### **Parâmetro de Rota (Path Parameter):**\n\n- `id` (inteiro): O identificador único da ação que você deseja consultar.  \n    **Exemplo:** `3`\n    \n\n---\n\n### **Resposta**\n\nEm caso de sucesso, o servidor responde com um objeto JSON contendo os detalhes da ação especificada. A estrutura da resposta normalmente inclui os seguintes campos:\n\n- `id`: Identificador único da ação.\n    \n- `name`: Nome da ação.\n    \n- `symbol`: Símbolo de negociação da ação.\n    \n- `price`: Preço atual da ação.\n    \n- `marketCap`: Capitalização de mercado da ação.\n    \n- `volume`: Volume de negociação da ação.\n    \n\n---\n\n#### **Exemplo de Resposta:**\n\n``` json\n{\n  \"id\": 3,\n  \"name\": \"Example Stock\",\n  \"symbol\": \"EXMPL\",\n  \"price\": 123.45,\n  \"marketCap\": 1000000000,\n  \"volume\": 15000\n}\n\n ```\n\nEste endpoint é útil para clientes que precisam buscar informações específicas de ações para exibição ou processamento adicional."
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Todos Ativos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/assets",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"assets"
+							]
+						},
+						"description": "Lista todos os ativos disponíveis."
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Todas Ações",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/assets/stocks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"assets",
+								"stocks"
+							]
+						},
+						"description": "Lista todas as ações disponíveis."
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Todos Títulos de Renda Fixa",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/assets/fixed-income",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"assets",
+								"fixed-income"
+							]
+						},
+						"description": "Lista todos os títulos de renda fixa disponíveis."
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Todos Fundos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/assets/funds",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"assets",
+								"funds"
+							]
+						},
+						"description": "Lista todos os fundos disponíveis."
+					},
+					"response": []
+				},
+				{
+					"name": "Detalhar Título de Renda Fixa",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/assets/fixed-income/TD001",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"assets",
+								"fixed-income",
+								"TD001"
+							]
+						},
+						"description": "Detalha um título de renda fixa pelo ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Detalhar Fundo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/assets/funds/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"assets",
+								"funds",
+								"1"
+							]
+						},
+						"description": "Detalha um fundo pelo ID."
+					},
+					"response": []
+				}
+			],
+			"description": "Busca e exibe de Ações e Renda Fixa."
+		},
+		{
+			"name": "Accounts",
+			"item": [
+				{
+					"name": "Deposito",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImVtYWlsIjoiYmFycm8xMjNAYmFycsOjby5jb20iLCJpYXQiOjE3NTI0MzA0OTEsImV4cCI6MTc1MjQzNDA5MX0.NUbwxsT7E0C6wb02D9OcKtgXhyoXl5D-4abA8KGMdE8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"contaId\": 1,\r\n  \"valor\": 100\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/accounts/deposit",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								"deposit"
+							]
+						},
+						"description": "## POST /api/v1/accounts/deposit\n\nEste endpoint é utilizado para depositar um valor especificado na conta de um usuário.\n\n### Parâmetros da Requisição\n\nO corpo da requisição deve estar no formato JSON e incluir os seguintes parâmetros:\n\n- `contaId` (integer): O identificador único da conta onde o depósito será realizado.\n    \n- `valor` (number): O valor a ser depositado na conta.\n    \n\n#### Exemplo de Corpo da Requisição\n\n``` json\n{\n  \"contaId\": 1,\n  \"valor\": 100\n}\n\n ```\n\n### Resposta Esperada\n\nApós um depósito bem-sucedido, a API retornará uma resposta indicando o status da transação. A resposta geralmente inclui a confirmação do depósito e pode conter detalhes adicionais sobre o saldo atualizado da conta.\n\n### Observações\n\n- Certifique-se de que o `contaId` corresponde a uma conta existente no sistema.\n    \n- O `valor` deve ser um número positivo representando o valor a ser depositado.\n    \n- Trate possíveis erros de forma adequada, como contas inválidas, pois a API retornará mensagens de erro apropriadas nesses casos."
+					},
+					"response": []
+				},
+				{
+					"name": "Saque",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImVtYWlsIjoiYmFycm8xMjNAYmFycsOjby5jb20iLCJpYXQiOjE3NTI0MzA0OTEsImV4cCI6MTc1MjQzNDA5MX0.NUbwxsT7E0C6wb02D9OcKtgXhyoXl5D-4abA8KGMdE8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"contaId\": 1,\r\n  \"valor\": 100\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/accounts/withdraw",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								"withdraw"
+							]
+						},
+						"description": "### Sacar Fundos da Conta\n\nEste endpoint permite que os usuários realizem o saque de uma quantia específica de sua conta. A requisição deve incluir o identificador da conta e o valor a ser sacado.\n\n---\n\n### Parâmetros da Requisição\n\nO corpo da requisição deve estar formatado como JSON e deve incluir os seguintes parâmetros:\n\n- `contaId` (integer): O identificador único da conta de onde os fundos serão retirados.\n    \n- `valor` (number): O valor a ser sacado da conta.\n    \n\n---\n\n#### Exemplo de Corpo da Requisição:\n\n``` json\n{\n  \"contaId\": 1,\n  \"valor\": 100\n}\n\n ```\n\n### Estrutura da Resposta\n\nApós um saque bem-sucedido, a resposta geralmente inclui uma confirmação da transação. A estrutura exata pode variar, mas normalmente contém:\n\n- `status` (string): Indica o sucesso ou falha da solicitação de saque.\n    \n- `message` (string): Uma mensagem descritiva sobre o resultado da transação.\n    \n- `transactionId` (string): Um identificador único da transação, se aplicável.\n    \n\n---\n\n### Observações\n\n- Certifique-se de que a conta possui saldo suficiente antes de realizar a solicitação de saque para evitar erros."
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Contas do Usuário Autenticado",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/api/v1/accounts",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts"
+							]
+						},
+						"description": "Lista todas as contas do usuário autenticado."
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Contas por userId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/accounts/user/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								"user",
+								"1"
+							]
+						},
+						"description": "Lista todas as contas de um usuário específico pelo userId."
+					},
+					"response": []
+				}
+			],
+			"description": "Gerenciamento de contas bancárias: criação, consulta, atualização e exclusão de contas dos usuários."
+		},
+		{
+			"name": "Transfers",
+			"item": [
+				{
+					"name": "Transf. Conta Corrente > investimento",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImVtYWlsIjoiYmFycm8xMjNAYmFycsOjby5jb20iLCJpYXQiOjE3NTI0MzA0OTEsImV4cCI6MTc1MjQzNDA5MX0.NUbwxsT7E0C6wb02D9OcKtgXhyoXl5D-4abA8KGMdE8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"contaOrigemId\": 1,\r\n  \"contaDestinoId\": 2,\r\n  \"valor\": 50\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/transfers/internal",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transfers",
+								"internal"
+							]
+						},
+						"description": "### API de Transferência Interna\n\nEste endpoint permite que os usuários iniciem uma transferência interna entre duas contas. Ele facilita a movimentação de fundos de uma conta de origem para uma conta de destino dentro da mesma instituição financeira.\n\n---\n\n### Requisição\n\n- **Método:** POST\n    \n- **Endpoint:** `{{URL}}/api/v1/transfers/internal`\n    \n\n---\n\n### Corpo da Requisição\n\nO corpo da requisição deve estar em formato JSON e conter os seguintes parâmetros:\n\n- `contaOrigemId` (integer): O identificador único da conta de origem da qual os fundos serão deduzidos.\n    \n- `contaDestinoId` (integer): O identificador único da conta de destino para a qual os fundos serão creditados.\n    \n- `valor` (number): O valor a ser transferido da conta de origem para a conta de destino.\n    \n\n---\n\n##### Exemplo de Corpo da Requisição:\n\n``` json\n{\n  \"contaOrigemId\": 1,\n  \"contaDestinoId\": 2,\n  \"valor\": 50\n}\n\n ```\n\n### Resposta\n\nA resposta deste endpoint normalmente incluirá uma confirmação da operação de transferência. A estrutura da resposta pode conter os seguintes campos:\n\n- `status` (string): Indica o sucesso ou falha da operação de transferência.\n    \n- `message` (string): Uma mensagem descritiva com detalhes adicionais sobre o status da transferência.\n    \n- `transferId` (integer): Um identificador único para a transação de transferência, se aplicável.\n    \n\n---\n\n##### Exemplo de Resposta:\n\n``` json\n{\n  \"status\": \"success\",\n  \"message\": \"Transfer completed successfully.\",\n  \"transferId\": 12345\n}\n\n ```\n\nCertifique-se de que o corpo da requisição esteja corretamente formatado e que todos os parâmetros obrigatórios estejam incluídos para que a transferência seja executada com sucesso."
+					},
+					"response": []
+				},
+				{
+					"name": "Transf. entre Usuarios",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImVtYWlsIjoiYmFycm8xMjNAYmFycsOjby5jb20iLCJpYXQiOjE3NTI0MzA0OTEsImV4cCI6MTc1MjQzNDA5MX0.NUbwxsT7E0C6wb02D9OcKtgXhyoXl5D-4abA8KGMdE8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"contaOrigemId\": 1,\r\n  \"contaDestinoId\": 3,\r\n  \"valor\": 500\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/transfers/external",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transfers",
+								"external"
+							]
+						},
+						"description": "## Transferencia Externa entre Fundos\n\nEste endpoint permite que os usuários iniciem uma transferência de fundos de uma conta para outra.\n\n**Método HTTP**  \n  \nPOST\n\n**Endpoint**  \n`{{URL}}/api/v1/transfers/external`\n\n---\n\n### Parâmetros da Requisição\n\nO corpo da requisição deve estar em formato JSON e incluir os seguintes parâmetros:\n\n- `contaOrigemId` (integer): O ID da conta de origem da qual os fundos serão retirados.\n    \n- `contaDestinoId` (integer): O ID da conta de destino para a qual os fundos serão transferidos.\n    \n- `valor` (number): O valor em dinheiro a ser transferido.\n    \n\n---\n\n##### Exemplo de Corpo da Requisição:\n\n``` json\n{\n  \"contaOrigemId\": 1,\n  \"contaDestinoId\": 3,\n  \"valor\": 500\n}\n\n ```\n\n### Formato Esperado da Resposta\n\nApós uma transferência bem-sucedida, a API retornará uma resposta indicando o status da transação.  \n  \nA resposta geralmente inclui detalhes como uma mensagem de confirmação e o ID da transação, embora o formato exato possa variar.\n\n---\n\n**Nota**  \n  \nCertifique-se de que todos os parâmetros sejam fornecidos corretamente para evitar erros no processamento da transferência."
+					},
+					"response": []
+				},
+				{
+					"name": "Comprar Ação via Transferência",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"stockId\": 1,\n  \"quantidade\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/transfers/buy-stock",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transfers",
+								"buy-stock"
+							]
+						},
+						"description": "Compra de ação via transferência."
+					},
+					"response": []
+				},
+				{
+					"name": "Vender Ação via Transferência",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"stockId\": 1,\n  \"quantidade\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/transfers/sell-stock",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transfers",
+								"sell-stock"
+							]
+						},
+						"description": "Venda de ação via transferência."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "Lista Todas Transações do Usuário",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImVtYWlsIjoiYmFycm8xMjNAYmFycsOjby5jb20iLCJpYXQiOjE3NTI0MTkyNzIsImV4cCI6MTc1MjQyMjg3Mn0.PwB-e8gRKrHYzgaOqwqdW7yFr12EQu0TIuzdG6Uk_vw",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/api/v1/transactions",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions"
+							]
+						},
+						"description": "### API Endpoint: Obter Transações\n\nEste endpoint recupera uma lista de transações associadas à conta do usuário. É útil para obter o histórico de transações e detalhes para acompanhamento e relatórios financeiros.\n\n---\n\n### Formato da Requisição\n\n**Método:** GET  \n**URL:** `{{URL}}/api/v1/transactions`  \n**Corpo da Requisição:** Nenhum corpo é necessário para esta requisição GET.\n\n---\n\n### Estrutura da Resposta\n\nA resposta retornará um objeto JSON contendo os seguintes campos:\n\n- `transactions`: Um array de objetos de transação, cada um contendo detalhes como:\n    \n    - `id`: O identificador único da transação.\n        \n    - `amount`: O valor monetário da transação.\n        \n    - `date`: A data em que a transação ocorreu.\n        \n    - `description`: Uma breve descrição da transação.\n        \n    - `status`: O status atual da transação (ex.: concluída, pendente).\n        \n\nA resposta também incluirá metadados sobre a requisição, como informações de paginação, se aplicável."
+					},
+					"response": []
+				},
+				{
+					"name": "Extrato Periodo",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImVtYWlsIjoiYmFycm8xMjNAYmFycsOjby5jb20iLCJpYXQiOjE3NTI0MzA0OTEsImV4cCI6MTc1MjQzNDA5MX0.NUbwxsT7E0C6wb02D9OcKtgXhyoXl5D-4abA8KGMdE8",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/api/v1/transactions/statement?type=sell&startDate=2025-07-01",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions",
+								"statement"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "sell"
+								},
+								{
+									"key": "startDate",
+									"value": "2025-07-01"
+								}
+							]
+						},
+						"description": "## API Request: Extrato de Operações com filtro\n\nEste endpoint permite que os usuários recuperem um extrato de transações com base em critérios específicos.\n\n---\n\n### Método da Requisição\n\n**GET**\n\n---\n\n### Endpoint\n\n`{{URL}}/api/v1/transactions/statement`\n\n---\n\n### Parâmetros de Consulta (Query Parameters)\n\n- `type` (string, obrigatório): Especifica o tipo de transação. Neste caso, deve ser definido como `sell`.\n    \n- `startDate` (string, obrigatório): A data de início para filtrar as transações, no formato `YYYY-MM-DD`. Aqui, está definida como `2025-07-01`.\n    \n\n---\n\n### Formato Esperado da Resposta\n\nA resposta normalmente incluirá um objeto JSON contendo os detalhes das transações que correspondem aos critérios especificados. A estrutura da resposta incluirá:\n\n- ID da transação\n    \n- Data\n    \n- Valor\n    \n- Status\n    \n\nGaranta o tratamento adequado para casos em que nenhuma transação seja encontrada para os parâmetros fornecidos."
+					},
+					"response": []
+				},
+				{
+					"name": "Extrato Com Filtros",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImVtYWlsIjoiYmFycm8xMjNAYmFycsOjby5jb20iLCJpYXQiOjE3NTI0MzQyMzksImV4cCI6MTc1MjQzNzgzOX0.47ZFXzUyhY3MIyhMxHUzO-jV6A_B0xbVeRPUH0O17jY",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/api/v1/transactions/statement?startDate=2025-07-10&endDate=2025-07-13T23:59:59",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions",
+								"statement"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2025-07-10"
+								},
+								{
+									"key": "endDate",
+									"value": "2025-07-13T23:59:59"
+								}
+							]
+						},
+						"description": "## Obter extrato de transações\n\nEste endpoint recupera um extrato de transações para um intervalo de datas especificado.\n\n---\n\n### Parâmetros da Requisição\n\n- `startDate` (string): A data de início do extrato de transações no formato `YYYY-MM-DD`. Este parâmetro define o início do intervalo de datas no qual as transações serão recuperadas.\n    \n- `endDate` (string): A data final do extrato de transações no formato `YYYY-MM-DDTHH:mm:ss`. Este parâmetro define o final do intervalo de datas e **deve incluir o horário** para capturar transações até o último momento da data especificada.\n    \n\n---\n\n### Resposta Esperada\n\nA resposta conterá uma lista de transações que ocorreram dentro do intervalo de datas fornecido. Cada transação incluirá detalhes relevantes como:\n\n- ID da transação\n    \n- Valor\n    \n- Data\n    \n- Status\n    \n\n---\n\n### Observações\n\n- Certifique-se de que o intervalo de datas especificado não ultrapasse os limites dos dados disponíveis.\n    \n- A resposta pode variar dependendo das transações existentes dentro do período informado."
+					},
+					"response": []
+				},
+				{
+					"name": "Comprar Ações",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImVtYWlsIjoiYmFycm8xMjNAYmFycsOjby5jb20iLCJpYXQiOjE3NTIzNjQ1NDIsImV4cCI6MTc1MjM2ODE0Mn0.Fw_pLnouOtgVVT0yyspQ8ffgV0G7VHXsrK98La-NEBk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"stockId\": 1,\r\n  \"amount\": 3,\r\n  \"type\": \"buy\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/transactions/buy",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions",
+								"buy"
+							]
+						},
+						"description": "### API Transação de Compra\n\nEste endpoint permite que os usuários iniciem uma transação de compra para uma ação específica.\n\n---\n\n### Requisição\n\n- **Método**: `POST`\n    \n- **URL**: `{{URL}}/api/v1/transactions/buy`\n    \n\n---\n\n### Corpo da Requisição (JSON)\n\nO corpo da requisição deve conter os seguintes parâmetros:\n\n- `stockId` (inteiro): O identificador único da ação que o usuário deseja comprar.\n    \n- `amount` (inteiro): A quantidade da ação a ser adquirida.\n    \n- `type` (string): O tipo de transação, que deve ser `\"buy\"` para esta operação.\n    \n\n**Exemplo de Corpo da Requisição:**\n\n``` json\n{\n  \"stockId\": 1,\n  \"amount\": 3,\n  \"type\": \"buy\"\n}\n\n ```\n\n### Resposta\n\nApós uma transação bem-sucedida, a API retornará uma resposta indicando o status da operação de compra. A resposta esperada normalmente incluirá:\n\n- Confirmação da transação\n    \n- ID da transação ou número de referência\n    \n- Saldo atualizado ou status da carteira (se aplicável)\n    \n\n---\n\n### Observações\n\n- Certifique-se de que o `stockId` corresponde a uma ação válida disponível no sistema.\n    \n- O campo `amount` deve ser um número inteiro positivo.\n    \n- Este endpoint é destinado a usuários que possuem saldo suficiente para concluir a compra.\n    \n- É importante implementar tratamento de erros adequado para lidar com casos em que a transação não possa ser concluída (ex: saldo insuficiente, ID de ação inválido)."
+					},
+					"response": []
+				},
+				{
+					"name": "Vender Ações",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImVtYWlsIjoiYmFycm8xMjNAYmFycsOjby5jb20iLCJpYXQiOjE3NTIzNjQ1NDIsImV4cCI6MTc1MjM2ODE0Mn0.Fw_pLnouOtgVVT0yyspQ8ffgV0G7VHXsrK98La-NEBk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"contaInvestimentoId\": 3,\r\n  \"stockId\": 1,\r\n  \"quantidade\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/transactions/sell-stock",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions",
+								"sell-stock"
+							]
+						},
+						"description": "### Transação de Venda\n\nEste endpoint permite que os usuários executem uma transação de venda de uma ação específica em sua conta de investimento. Ao fornecer os parâmetros necessários, o usuário pode especificar qual ação deseja vender e em qual quantidade.\n\n---\n\n### Formato da Requisição\n\n- **Método HTTP**: `POST`\n    \n- **Endpoint**: `{{URL}}/api/v1/transactions/sell-stock`\n    \n- **Corpo da Requisição**: A requisição deve ser enviada em formato JSON com a seguinte estrutura:\n    \n\n``` json\n{\n  \"contaInvestimentoId\": <integer>,  // The ID of the investment account\n  \"stockId\": <integer>,                // The ID of the stock to be sold\n  \"quantidade\": <integer>              // The quantity of stocks to sell\n}\n\n ```\n\n### Parâmetros\n\n- `contaInvestimentoId` (inteiro): Identificador único da conta de investimento do usuário.\n    \n- `stockId` (inteiro): Identificador único da ação que o usuário deseja vender.\n    \n- `quantidade` (inteiro): Número de ações que o usuário deseja vender.\n    \n\n---\n\n### Estrutura da Resposta\n\nApós uma transação bem-sucedida, a API retornará uma resposta indicando o resultado da operação de venda. A estrutura exata da resposta pode variar conforme a implementação, mas geralmente inclui:\n\n- Confirmação da transação\n    \n- Informações relevantes como imposto retido, valor líquido ou saldo atualizado\n    \n\n---\n\n### Observações\n\n- Certifique-se de fornecer todos os parâmetros corretamente para evitar erros durante o processo da transação.\n    \n- O usuário deve possuir ações suficientes para realizar a venda.\n    \n- Impostos e taxas podem ser aplicados automaticamente pela API."
+					},
+					"response": []
+				},
+				{
+					"name": "Vender Titulos Renda Fixa",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImVtYWlsIjoiYmFycm8xMjNAYmFycsOjby5jb20iLCJpYXQiOjE3NTI0MTkyNzIsImV4cCI6MTc1MjQyMjg3Mn0.PwB-e8gRKrHYzgaOqwqdW7yFr12EQu0TIuzdG6Uk_vw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"contaInvestimentoId\": 2,\r\n  \"fixedIncomeId\": \"TD001\",\r\n  \"quantidade\": 2\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/transactions/sell-fixed-income",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions",
+								"sell-fixed-income"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Comprar Título de Renda Fixa",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fixedIncomeId\": \"TD001\",\n  \"quantidade\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/transactions/buy-fixed-income",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions",
+								"buy-fixed-income"
+							]
+						},
+						"description": "Compra de título de renda fixa."
+					},
+					"response": []
+				},
+				{
+					"name": "Comprar Fundo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fundId\": 1,\n  \"quantidade\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/transactions/buy-fund",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions",
+								"buy-fund"
+							]
+						},
+						"description": "Compra de fundo de investimento."
+					},
+					"response": []
+				},
+				{
+					"name": "Vender Fundo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fundId\": 1,\n  \"quantidade\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/transactions/sell-fund",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"transactions",
+								"sell-fund"
+							]
+						},
+						"description": "Venda de fundo de investimento."
+					},
+					"response": []
+				}
+			],
+			"description": "Responsável por realizar consultas de movimentações, extratos e dahboards."
+		}
+	],
+	"auth": {
+		"type": "jwt",
+		"jwt": [
+			{
+				"key": "header",
+				"value": "{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqb2FvLnNpbHZhQGVtYWlsLmNvbSIsImlhdCI6MTc1MjM1MzQ5NywiZXhwIjoxNzUyMzU3MDk3fQ.IRVIuLzuZjmA95sQ3sT2YXZIFJWpGW_-K-PXwBgbdYY}",
+				"type": "string"
+			},
+			{
+				"key": "payload",
+				"value": "{}",
+				"type": "string"
+			},
+			{
+				"key": "algorithm",
+				"value": "HS256",
+				"type": "string"
+			},
+			{
+				"key": "isSecretBase64Encoded",
+				"value": false,
+				"type": "boolean"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "headerPrefix",
+				"value": "Bearer",
+				"type": "string"
+			},
+			{
+				"key": "queryParamKey",
+				"value": "token",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

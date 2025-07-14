@@ -1,11 +1,11 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-// Compra de ações ou renda fixa
-async function handleBuyTransaction({ userId, stockId, fixedIncomeId, amount, type }) {
+// Compra de ações, renda fixa ou fundo de investimento
+async function handleBuyTransaction({ userId, stockId, fixedIncomeId, fundInvestmentId, amount, type }) {
   if (!amount || amount <= 0) throw new Error('Quantidade inválida.');
-  if (!stockId && !fixedIncomeId) throw new Error('Informe um ativo (stockId ou fixedIncomeId).');
-  if (stockId && fixedIncomeId) throw new Error('Informe apenas um ativo.');
+  const ativosInformados = [stockId, fixedIncomeId, fundInvestmentId].filter(Boolean);
+  if (ativosInformados.length !== 1) throw new Error('Informe apenas um ativo (stockId, fixedIncomeId ou fundInvestmentId).');
 
   // 1. Obter conta investimento do usuário
   const contaInvestimento = await prisma.account.findFirst({
@@ -20,12 +20,14 @@ async function handleBuyTransaction({ userId, stockId, fixedIncomeId, amount, ty
   let ativo;
   let preco = 0;
   let taxa = 0;
+  let descricao = '';
 
   if (stockId) {
     ativo = await prisma.stock.findUnique({ where: { id: stockId } });
     if (!ativo) throw new Error('Ação não encontrada.');
     preco = ativo.currentPrice;
     taxa = preco * amount * 0.01; // 1% taxa de corretagem
+    descricao = `Compra de ação (${ativo.symbol})`;
   }
 
   if (fixedIncomeId) {
@@ -33,6 +35,15 @@ async function handleBuyTransaction({ userId, stockId, fixedIncomeId, amount, ty
     if (!ativo) throw new Error('Renda fixa não encontrada.');
     preco = ativo.minimumInvestment;
     taxa = 0; // sem taxa de corretagem
+    descricao = `Compra de renda fixa (${ativo.name})`;
+  }
+
+  if (fundInvestmentId) {
+    ativo = await prisma.fundInvestment.findUnique({ where: { id: fundInvestmentId } });
+    if (!ativo) throw new Error('Fundo de investimento não encontrado.');
+    preco = ativo.minimumInvestment;
+    taxa = 0; // sem taxa de corretagem
+    descricao = `Compra de fundo (${ativo.name})`;
   }
 
   const totalCompra = preco * amount + taxa;
@@ -57,7 +68,7 @@ async function handleBuyTransaction({ userId, stockId, fixedIncomeId, amount, ty
         valor: totalCompra,
         contaOrigemId: contaInvestimento.id,
         userId,
-        descricao: `Compra de ativo (${stockId ? ativo.symbol : ativo.name})`,
+        descricao,
       },
     });
 
@@ -67,12 +78,69 @@ async function handleBuyTransaction({ userId, stockId, fixedIncomeId, amount, ty
         userId,
         stockId: stockId || null,
         fixedIncomeId: fixedIncomeId || null,
+        fundInvestmentId: fundInvestmentId || null,
         amount,
         type,
       },
     });
   });
 }
+// Venda de fundo de investimento
+const venderFundo = async ({ userId, contaInvestimentoId, fundInvestmentId, quantidade }) => {
+  if (!quantidade || quantidade <= 0) throw new Error('Quantidade inválida.');
+  if (!fundInvestmentId) throw new Error('ID do fundo não informado.');
+
+  const conta = await prisma.account.findUnique({ where: { id: contaInvestimentoId } });
+  if (!conta || conta.type !== 'investimento') throw new Error('Conta de investimento não encontrada.');
+
+  const fundo = await prisma.fundInvestment.findUnique({ where: { id: fundInvestmentId } });
+  if (!fundo) throw new Error('Fundo de investimento não encontrado.');
+
+  const precoVenda = fundo.minimumInvestment || 0;
+  const totalBruto = precoVenda * quantidade;
+  const imposto = totalBruto * 0.22; // 22% de IR (igual renda fixa)
+  const totalLiquido = totalBruto - imposto;
+
+  // Credita na conta
+  await prisma.account.update({
+    where: { id: contaInvestimentoId },
+    data: { balance: { increment: totalLiquido } },
+  });
+
+  // Registra transação
+  const transacao = await prisma.transaction.create({
+    data: {
+      userId,
+      stockId: null,
+      fixedIncomeId: null,
+      fundInvestmentId,
+      type: 'sell',
+      amount: quantidade,
+    },
+  });
+
+  // Registra movimentação
+  await prisma.movement.create({
+    data: {
+      userId,
+      contaOrigemId: null,
+      contaDestinoId: contaInvestimentoId,
+      tipo: 'venda_fundo',
+      valor: totalLiquido,
+      descricao: `Venda de ${quantidade}x ${fundo.name} com IR de 22% (${imposto.toFixed(2)})`,
+    },
+  });
+
+  // Retorno compatível com o teste
+  return {
+    id: transacao.id,
+    fundInvestmentId,
+    amount: quantidade,
+    impostoRetido: imposto,
+    totalLiquido,
+    totalBruto
+  };
+};
 
 // Lista as transações de um usuário
 async function listUserTransactions(userId) {
@@ -159,8 +227,10 @@ async function listExtrato({ userId, type, account, startDate, endDate }) {
 
 // Venda de ações
 const venderAcoes = async ({ userId, contaInvestimentoId, stockId, quantidade }) => {
+
   if (!quantidade || quantidade <= 0) throw new Error('Quantidade inválida.');
   if (!stockId) throw new Error('ID do ativo não informado.');
+  if (!contaInvestimentoId) throw new Error('ID da conta de investimento não informado.');
 
   const conta = await prisma.account.findUnique({ where: { id: contaInvestimentoId } });
   if (!conta || conta.type !== 'investimento') throw new Error('Conta de investimento não encontrada.');
@@ -202,13 +272,21 @@ const venderAcoes = async ({ userId, contaInvestimentoId, stockId, quantidade })
     },
   });
 
-  return transacao;
+  // Retorno compatível com o teste
+  return {
+    id: transacao.id,
+    impostoRetido: imposto,
+    totalLiquido,
+    totalBruto
+  };
 };
 
 // Venda de renda fixa
 const venderRendaFixa = async ({ userId, contaInvestimentoId, fixedIncomeId, quantidade }) => {
+
   if (!quantidade || quantidade <= 0) throw new Error('Quantidade inválida.');
   if (!fixedIncomeId) throw new Error('ID do ativo de renda fixa não informado.');
+  if (!contaInvestimentoId) throw new Error('ID da conta de investimento não informado.');
 
   const conta = await prisma.account.findUnique({ where: { id: contaInvestimentoId } });
   if (!conta || conta.type !== 'investimento') throw new Error('Conta de investimento não encontrada.');
@@ -246,11 +324,17 @@ const venderRendaFixa = async ({ userId, contaInvestimentoId, fixedIncomeId, qua
       contaDestinoId: contaInvestimentoId,
       tipo: 'venda_renda_fixa',
       valor: totalLiquido,
-      descricao: `Venda de ${quantidade}x ${rendaFixa.name} com IR de 22% (${imposto.toFixed(2)})`,
+      descricao: `Venda de ${quantidade}x ${rendaFixa.nome} com IR de 22% (${imposto.toFixed(2)})`,
     },
   });
 
-  return transacao;
+  // Retorno compatível com o teste
+  return {
+    id: transacao.id,
+    impostoRetido: imposto,
+    totalLiquido,
+    totalBruto
+  };
 };
 
 module.exports = {
@@ -259,4 +343,5 @@ module.exports = {
   listExtrato,
   venderAcoes,
   venderRendaFixa,
+  venderFundo,
 };

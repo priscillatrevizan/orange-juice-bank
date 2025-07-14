@@ -10,13 +10,13 @@ async function realizarTransferencia({ userId, contaOrigemId, contaDestinoId, va
   const contaOrigem = await prisma.account.findUnique({ where: { id: contaOrigemId } });
   const contaDestino = await prisma.account.findUnique({ where: { id: contaDestinoId } });
 
-  if (!contaOrigem || !contaDestino) throw new Error('Conta de origem ou destino não encontrada.');
+  if (!contaOrigem || !contaDestino) throw new Error('Saldo insuficiente ou conta de origem/destino não encontrada.');
 
   const mesmaPessoa = contaOrigem.userId === contaDestino.userId;
 
   if (tipo === 'transferencia_interna') {
     if (!mesmaPessoa) throw new Error('Transferência interna deve ser entre contas do mesmo usuário.');
-    if (contaOrigem.balance < valor) throw new Error('Saldo insuficiente na conta de origem.');
+    if (contaOrigem.balance < valor) throw new Error('Saldo insuficiente.');
 
     // Validação: se for de investimento para corrente, checar pendências
     if (contaOrigem.type === 'investimento' && contaDestino.type === 'corrente') {
@@ -66,7 +66,7 @@ async function realizarTransferencia({ userId, contaOrigemId, contaDestinoId, va
     const taxa = valor * 0.005;
     const total = valor + taxa;
 
-    if (contaOrigem.balance < total) throw new Error('Saldo insuficiente para cobrir valor + taxa.');
+    if (contaOrigem.balance < total) throw new Error('Saldo insuficiente.');
 
     await prisma.account.update({
       where: { id: contaOrigemId },

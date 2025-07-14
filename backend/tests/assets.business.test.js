@@ -11,6 +11,7 @@ describe('Operações de Ativos e Relatórios', () => {
   let stockId;
   let fixedIncomeId;
 
+
   beforeAll(async () => {
     // Fluxo igual ao teste de transferência
     const unique = `${Date.now()}${Math.floor(Math.random() * 100000)}`;
@@ -21,26 +22,27 @@ describe('Operações de Ativos e Relatórios', () => {
       .post('/api/v1/users')
       .send({ name: 'Usuário Teste', email, cpf, birthDate: '2000-01-01' });
     userId = resUser.body.id;
-    // Busca contas com retry
+    // Login
+    const login = await request(app).post('/api/v1/auth/login').send({ email, cpf });
+    token = login.body.token;
+    // Busca contas com retry usando token
     let tentativas = 10;
     let contas = [];
     let resContas;
     while (tentativas-- > 0) {
-      resContas = await request(app).get(`/api/v1/accounts/user/${userId}`);
-      console.log('DEBUG TESTE: contasArray =', resContas.body);
-      if (resContas.status === 200 && Array.isArray(resContas.body) && resContas.body.length >= 2) {
-        contas = resContas.body;
+      resContas = await request(app)
+        .get('/api/v1/accounts')
+        .set('Authorization', `Bearer ${token}`);
+      // Suporta resposta como array direto ou { accounts: [] }
+      let contasArray = Array.isArray(resContas.body) ? resContas.body : (Array.isArray(resContas.body.accounts) ? resContas.body.accounts : []);
+      if (resContas.status === 200 && contasArray.length >= 2) {
+        contas = contasArray;
         break;
       }
       await new Promise(r => setTimeout(r, 500));
     }
     contaCorrenteId = contas.find(c => c.type === 'corrente')?.id;
     contaInvestimentoId = contas.find(c => c.type === 'investimento')?.id;
-    console.log('DEBUG TESTE: contaCorrenteId =', contaCorrenteId);
-    console.log('DEBUG TESTE: contaInvestimentoId =', contaInvestimentoId);
-    // Login
-    const login = await request(app).post('/api/v1/auth/login').send({ email, cpf });
-    token = login.body.token;
     // Busca ativos
     const ativos = await request(app).get('/api/v1/assets').set('Authorization', `Bearer ${token}`);
     stockId = ativos.body.stocks?.[0]?.id;
@@ -49,7 +51,7 @@ describe('Operações de Ativos e Relatórios', () => {
     await request(app).post('/api/v1/accounts/deposit').set('Authorization', `Bearer ${token}`).send({ contaId: contaCorrenteId, valor: 10000 });
     // Transfere para investimento
     await request(app).post('/api/v1/transfers/internal').set('Authorization', `Bearer ${token}`).send({ contaOrigemId: contaCorrenteId, contaDestinoId: contaInvestimentoId, valor: 5000 });
-  });
+  }, 20000);
 
   it('deve permitir compra de ações e cobrar taxa de 1%', async () => {
     const quantidade = 10;

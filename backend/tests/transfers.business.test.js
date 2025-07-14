@@ -8,7 +8,7 @@ describe('Transferências - Regras de Negócio', () => {
     const cpf = `${unique}`.padStart(11, '0').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
     let userId, token, contaCorrenteId, contaInvestimentoId;
 
-    it('deve criar usuário e contas', async () => {
+    it('deve criar usuário, fazer login e buscar contas', async () => {
       const res = await request(app)
         .post('/api/v1/users')
         .send({ name: 'Usuário Teste', email, cpf, birthDate: '2000-01-01' });
@@ -17,30 +17,37 @@ describe('Transferências - Regras de Negócio', () => {
       expect([200, 201]).toContain(res.status);
       expect(res.body).toHaveProperty('id');
       userId = res.body.id;
-    });
 
-    it('deve retornar as contas corrente e investimento criadas', async () => {
+      // Login
+      const loginRes = await request(app)
+        .post('/api/v1/auth/login')
+        .send({ email, cpf });
+      expect(loginRes.status).toBe(200);
+      token = loginRes.body.token;
+
+      // Buscar contas
       let tentativas = 10;
       let contas = [];
-      let res;
+      let resContas;
       while (tentativas-- > 0) {
-        res = await request(app)
-          .get(`/api/v1/accounts/user/${userId}`);
-        console.log('Buscar contas:', res.status, res.body);
-        if (res.status === 200 && Array.isArray(res.body) && res.body.length >= 2) {
-          contas = res.body;
+        resContas = await request(app)
+          .get('/api/v1/accounts')
+          .set('Authorization', `Bearer ${token}`);
+        let contasArray = Array.isArray(resContas.body) ? resContas.body : (Array.isArray(resContas.body.accounts) ? resContas.body.accounts : []);
+        if (resContas.status === 200 && contasArray.length >= 2) {
+          contas = contasArray;
           break;
         }
-        await new Promise(r => setTimeout(r, 500)); // espera 500ms
+        await new Promise(r => setTimeout(r, 500));
       }
       if (!contas.length) {
-        throw new Error(`Contas não encontradas após múltiplas tentativas. Última resposta: ${res.status} ${JSON.stringify(res.body)}`);
+        throw new Error(`Contas não encontradas após múltiplas tentativas. Última resposta: ${resContas.status} ${JSON.stringify(resContas.body)}`);
       }
       contaCorrenteId = contas.find(c => c.type === 'corrente')?.id;
       contaInvestimentoId = contas.find(c => c.type === 'investimento')?.id;
       expect(contaCorrenteId).toBeDefined();
       expect(contaInvestimentoId).toBeDefined();
-    }, 20000); // timeout 20s
+    }, 20000);
 
     it('deve recusar criação de usuário duplicado', async () => {
       const res = await request(app)
