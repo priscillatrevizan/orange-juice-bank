@@ -1,43 +1,35 @@
 version: '3.8'
-
 services:
-  backend:
-    build: ./backend
-    container_name: orangejuicebank-backend
-    ports:
-      - "3000:3000"
-    environment:
-      - DATABASE_URL=postgresql://postgres:12345@db:5432/orangejuicebank
-      - JWT_SECRET=sua_senha_super_secreta
-      - PORT=3000
-    depends_on:
-      - db
-    command: sh -c "npx prisma generate && node src/server.js"
-    restart: unless-stopped
-
-  frontend:
-    build: ./frontend
-    container_name: orangejuicebank-frontend
-    ports:
-      - "80:80"
-    environment:
-      - VITE_API_URL=http://localhost:3000/api/v1
-    depends_on:
-      - backend
-    restart: unless-stopped
-
   db:
     image: postgres:15
-    container_name: orangejuicebank-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: orangejuicebank
     ports:
       - "5432:5432"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=12345
-      - POSTGRES_DB=orangejuicebank
     volumes:
       - pgdata:/var/lib/postgresql/data
-    restart: unless-stopped
-
-volumes:
-  pgdata:
+  backend:
+    build:
+      context: ./backend
+    env_file:
+      - ./backend/.env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:3000/api/v1
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
