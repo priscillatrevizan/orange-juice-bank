@@ -1,4 +1,4 @@
-version: "1"
+vversion: "1"
 
 services:
   - type: web
@@ -17,7 +17,6 @@ services:
     name: orangejuicebank-backend
     runtime: node
     repo: https://github.com/priscillatrevizan/orange-juice-bank
-    region: ohio
     branch: main
     rootDir: backend
     buildCommand: npm install && npx prisma generate
@@ -35,5 +34,4 @@ services:
 databases:
   - name: orangejuicebank-db
     databaseName: orangejuicebank
-    region: ohio
     plan: free
