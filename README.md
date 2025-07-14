@@ -43,6 +43,7 @@ orange-juice-bank/
 ## Documentação Detalhada
 
 - [Documentação do Backend](backend/README-backend.md)
+- [Collection Postman](https://github.com/priscillatrevizan/orange-juice-bank/blob/main/backend/Orange-Juice-Bank.postman_collection.json)
 - [Documentação do Frontend](frontend/README-frontend.md)
 - [Documentos auxiliares e planejamento](docs/):
      - [Regras de Negócio](https://github.com/priscillatrevizan/orange-juice-bank/blob/main/docs/regradenegocio.md)
