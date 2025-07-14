@@ -1,0 +1,29 @@
+[
+  {
+    "id": "FND001",
+    "name": "Fundo Multimercado Alpha",
+    "type": "Multimercado",
+    "description": "Fundo diversificado com exposição em ações, renda fixa e câmbio.",
+    "rate": 0.13,
+    "rateType": "pre",
+    "minimumInvestment": 500.00
+  },
+  {
+    "id": "FND002",
+    "name": "Fundo de Ações Beta",
+    "type": "Ações",
+    "description": "Fundo focado em ações brasileiras de grande capitalização.",
+    "rate": 0.16,
+    "rateType": "pre",
+    "minimumInvestment": 100.00
+  },
+  {
+    "id": "FND003",
+    "name": "Fundo Renda Fixa Plus",
+    "type": "Renda Fixa",
+    "description": "Fundo de renda fixa com gestão ativa e liquidez diária.",
+    "rate": 0.11,
+    "rateType": "pos",
+    "minimumInvestment": 200.00
+  }
+]

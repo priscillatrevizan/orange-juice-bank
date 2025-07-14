@@ -27,12 +27,15 @@ async function sacarConta(req, res) {
 // Buscar todas as contas de um usuário
 async function getContasByUser(req, res) {
   try {
-    const { userId } = req.params;
-    const contas = await buscarContasPorUsuario(userId);
-    if (!contas || contas.length === 0) {
-      return res.status(404).json({ error: 'Nenhuma conta encontrada para este usuário.' });
+    // Sempre prioriza o usuário autenticado se não houver userId nos params
+    // Só permite acesso autenticado
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ error: 'Usuário não autenticado.' });
     }
-    return res.status(200).json(contas);
+    const userId = req.user.id;
+    console.log('DEBUG CONTAS: req.user =', req.user, '| userId =', userId);
+    const contas = await buscarContasPorUsuario(userId);
+    return res.status(200).json(Array.isArray(contas) ? contas : []);
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }

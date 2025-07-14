@@ -1,5 +1,9 @@
+
 const jwt = require('jsonwebtoken');
 const secret = process.env.JWT_SECRET;
+if (!secret) {
+  throw new Error('JWT_SECRET não definido nas variáveis de ambiente.');
+}
 
 function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;

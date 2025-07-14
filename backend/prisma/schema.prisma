@@ -18,9 +18,7 @@ model User {
   transactions  Transaction[]
   accounts      Account[]
   movements     Movement[]
- 
 }
-
 
 model Stock {
   id             Int           @id @default(autoincrement())
@@ -47,6 +45,19 @@ model FixedIncome {
   transactions      Transaction[]
 }
 
+model FundInvestment {
+  id                String   @id                 // ex: FND001
+  name              String
+  type              String                       // Fundo de Ações, Multimercado, etc
+  description       String?
+  rate              Float                        // Rentabilidade anual estimada
+  rateType          String                       // "pre" ou "pos"
+  minimumInvestment Float
+  createdAt         DateTime   @default(now())
+
+  transactions      Transaction[]
+}
+
 model Transaction {
   id              Int       @id @default(autoincrement())
   user            User      @relation(fields: [userId], references: [id])
@@ -58,6 +69,9 @@ model Transaction {
 
   fixedIncome     FixedIncome? @relation(fields: [fixedIncomeId], references: [id])
   fixedIncomeId   String?
+
+  fundInvestment  FundInvestment? @relation(fields: [fundInvestmentId], references: [id])
+  fundInvestmentId String?
 
   type            String    // 'buy' (por enquanto)
   amount          Int       // quantidade de cotas ou fração investida

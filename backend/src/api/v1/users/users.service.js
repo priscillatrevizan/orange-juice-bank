@@ -3,8 +3,10 @@ const prisma = new PrismaClient();
 
 async function create(data) {
   const { name, email, cpf, birthDate } = data;
+  // Permite receber tx para transação
+  const prismaClient = data.tx || prisma;
 
-  const exists = await prisma.user.findFirst({
+  const exists = await prismaClient.user.findFirst({
     where: {
       OR: [{ email }, { cpf }],
     },
@@ -14,7 +16,7 @@ async function create(data) {
     throw new Error('Usuário com este e-mail ou CPF já existe.');
   }
 
-  return await prisma.user.create({
+  return await prismaClient.user.create({
     data: {
       name,
       email,

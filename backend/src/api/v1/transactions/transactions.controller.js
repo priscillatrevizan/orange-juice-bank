@@ -17,8 +17,36 @@ const {
   listExtrato, 
   comprarAcoes, 
   venderAcoes, 
-  venderRendaFixa 
+  venderRendaFixa, 
+  venderFundo
 } = require('./transactions.service');
+// Comprar fundo de investimento
+async function buyFund(req, res) {
+  try {
+    const userId = req.user.id;
+    const { fundInvestmentId, quantidade } = req.body;
+    const result = await handleBuyTransaction({ userId, fundInvestmentId, amount: quantidade, type: 'buy' });
+    return res.status(201).json(result);
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+}
+
+// Vender fundo de investimento
+async function sellFund(req, res) {
+  try {
+    const userId = req.user.id;
+    const { contaInvestimentoId, fundInvestmentId, quantidade } = req.body;
+    const result = await venderFundo({ userId, contaInvestimentoId, fundInvestmentId, quantidade });
+    // Garante que a resposta tenha a propriedade 'impostoRetido' se existir
+    if (result && typeof result.impostoRetido === 'undefined') {
+      result.impostoRetido = result.impostoRetido ?? (result.amount ? result.amount * 0.22 : 0);
+    }
+    return res.status(201).json(result);
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
+  }
+}
 
 async function createTransaction(req, res) {
   try {
@@ -132,4 +160,6 @@ module.exports = {
   sellStock,
   sellFixedIncome,
   buyFixedIncome
+  ,buyFund
+  ,sellFund
 };

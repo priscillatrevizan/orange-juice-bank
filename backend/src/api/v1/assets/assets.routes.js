@@ -7,11 +7,14 @@ const AssetsController = require('./assets.controller');
 //   res.json({ message: 'Assets endpoint funcionando!' });
 // });
 
+
 router.get('/stocks/:id', AssetsController.getStockById);
 router.get('/fixed-income/:id', AssetsController.getFixedIncomeById);
+router.get('/funds/:id', AssetsController.getFundById);
 
 router.get('/stocks', AssetsController.getAllStocks);
 router.get('/fixed-income', AssetsController.getAllFixedIncome);
+router.get('/funds', AssetsController.getAllFunds);
 
 router.get('/', AssetsController.getAllAssets);
 
