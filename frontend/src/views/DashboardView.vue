@@ -170,6 +170,7 @@ const modal = ref({ visible: false, title: '', content: '', onConfirm: null });
 const quantidade = ref(1);
 function venderAcao(a) {
   quantidade.value = 1;
+  const contaInvest = contas.value.find(c => c.type === 'investimento');
   modal.value = {
     visible: true,
     title: `Vender ações de ${a.stock.symbol}`,
@@ -177,7 +178,7 @@ function venderAcao(a) {
     onConfirm: async () => {
       if (!quantidade.value || quantidade.value <= 0 || quantidade.value > a.amount) return;
       try {
-        await api.post('/transactions/sell-stock', { stockId: a.stock.id, quantidade: quantidade.value });
+        await api.post('/transactions/sell-stock', { stockId: a.stock.id, quantidade: quantidade.value, investmentAccountId: contaInvest?.id });
         toastType.value = 'success';
         toastMsg.value = 'Venda realizada com sucesso!';
         modal.value.visible = false;
@@ -191,6 +192,7 @@ function venderAcao(a) {
 }
 function venderCDB(c) {
   quantidade.value = 1;
+  const contaInvest = contas.value.find(c => c.type === 'investimento');
   modal.value = {
     visible: true,
     title: `Vender CDB de ${c.fixedIncome.name}`,
@@ -198,7 +200,7 @@ function venderCDB(c) {
     onConfirm: async () => {
       if (!quantidade.value || quantidade.value <= 0 || quantidade.value > c.amount) return;
       try {
-        await api.post('/transactions/sell-fixed-income', { fixedIncomeId: c.fixedIncome.id, quantidade: quantidade.value });
+        await api.post('/transactions/sell-fixed-income', { fixedIncomeId: c.fixedIncome.id, quantidade: quantidade.value, investmentAccountId: contaInvest?.id });
         toastType.value = 'success';
         toastMsg.value = 'Venda de CDB realizada!';
         modal.value.visible = false;
@@ -212,6 +214,7 @@ function venderCDB(c) {
 }
 function venderTesouro(t) {
   quantidade.value = 1;
+  const contaInvest = contas.value.find(c => c.type === 'investimento');
   modal.value = {
     visible: true,
     title: `Vender Tesouro Direto de ${t.fixedIncome.name}`,
@@ -219,7 +222,7 @@ function venderTesouro(t) {
     onConfirm: async () => {
       if (!quantidade.value || quantidade.value <= 0 || quantidade.value > t.amount) return;
       try {
-        await api.post('/transactions/sell-fixed-income', { fixedIncomeId: t.fixedIncome.id, quantidade: quantidade.value });
+        await api.post('/transactions/sell-fixed-income', { fixedIncomeId: t.fixedIncome.id, quantidade: quantidade.value, investmentAccountId: contaInvest?.id });
         toastType.value = 'success';
         toastMsg.value = 'Venda de Tesouro Direto realizada!';
         modal.value.visible = false;
@@ -233,6 +236,7 @@ function venderTesouro(t) {
 }
 function venderFundo(f) {
   quantidade.value = 1;
+  const contaInvest = contas.value.find(c => c.type === 'investimento');
   modal.value = {
     visible: true,
     title: `Vender fundo de ${f.fundInvestment.name}`,
@@ -240,7 +244,7 @@ function venderFundo(f) {
     onConfirm: async () => {
       if (!quantidade.value || quantidade.value <= 0 || quantidade.value > f.amount) return;
       try {
-        await api.post('/transactions/sell-fund', { fundInvestmentId: f.fundInvestment.id, quantidade: quantidade.value });
+        await api.post('/transactions/sell-fund', { fundInvestmentId: f.fundInvestment.id, quantidade: quantidade.value, investmentAccountId: contaInvest?.id });
         toastType.value = 'success';
         toastMsg.value = 'Venda de fundo realizada!';
         modal.value.visible = false;

@@ -16,9 +16,11 @@ RUN npm install
 COPY frontend/ ./
 RUN npm run build
 
-# Etapa 3: Produção (opcional, se for servir frontend estaticamente)
-# FROM nginx:alpine
-# COPY --from=frontend /app/frontend/dist /usr/share/nginx/html
+
+# Etapa 3: Produção - servir frontend estaticamente
+FROM nginx:alpine AS production
+COPY --from=frontend /app/frontend/dist /usr/share/nginx/html
+# Se quiser rodar backend junto, adicione as linhas abaixo e ajuste o entrypoint
 # COPY --from=backend /app/backend /app/backend
 # ...
 
