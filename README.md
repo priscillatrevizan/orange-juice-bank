@@ -1,9 +1,7 @@
-# 🍊 OrangeJuiceBank - Hackathon de Investimentos
 
-Boas vindas ao desafio do Orange Hackathon!  
-Neste final de semana, seu objetivo será desenvolver uma **API de um mini banco de investimentos**, simulando operações comuns do mercado financeiro.
+# 🍊OrangeJuiceBank
 
----
+Projeto fullstack de simulação bancária e investimentos, desenvolvido durante o Orange Hackathon.
 
 ## 🎯 Objetivo
 
@@ -17,60 +15,62 @@ A FCamara atende bancos de investimentos e multiplos que possuem expressão a n�
 
 ---
 
-## 📌 Funcionalidades Obrigatórias
+## Visão Geral
 
-Sua API deve conter funcionalidades que permitam:
+O OrangeJuiceBank é composto por dois grandes módulos:
+- **Backend**: API RESTful para operações bancárias, investimentos e autenticação.
+- **Frontend**: Interface web responsiva para interação do usuário.
 
-- Criar contas de usuários
-- Consultar saldo
-- Realizar **depósitos**, **saques** e **transferências** entre contas
-- Investir em ativos:
-  - Renda variável (ações fictícias)
-  - Fundos de investimento
-  - Renda fixa:
-    - CDB
-    - Tesouro Direto
-- Realizar **compra e venda de ativos**
-- Cálculo automático de taxas e tributos por operação
+## Estrutura do Projeto
+
+```
+orange-juice-bank/
+├── backend/                # Código-fonte e documentação do backend
+│   └── README-backend.md
+├── frontend/               # Código-fonte e documentação do frontend
+│   └── README-frontend.md
+├── docs/                   # Documentação auxiliar (requisitos, checklist, planejamento)
+│   ├── requirements.md
+│   ├── tech-planning.md
+│   ├── execution-checklist.md
+│   └── regradenegocio.md
+├── docker-compose.yml      # Orquestração dos serviços
+├── Dockerfile              # Build customizado (multi-stage)
+├── render.yaml             # Configuração para deploy no Render.com
+└── README.md               # Este arquivo
+```
+
+## Documentação Detalhada
+
+- [Documentação do Backend](backend/README-backend.md)
+- [Documentação do Frontend](frontend/README-frontend.md)
+- [Documentos auxiliares e planejamento](docs/):
+     - [Regras de Negócio](https://github.com/priscillatrevizan/orange-juice-bank/blob/main/docs/regradenegocio.md)
+     - [Análise de Requisitos](https://github.com/priscillatrevizan/orange-juice-bank/blob/main/docs/requirements.md)
+     - [Planejamento Tecnico](https://github.com/priscillatrevizan/orange-juice-bank/blob/main/docs/tech-planning.md)
+     - [Checklist de Execução](https://github.com/priscillatrevizan/orange-juice-bank/blob/main/docs/execution-checklist.md)
+
+## Como rodar o projeto
+
+1. **Pré-requisitos**: Docker e Docker Compose instalados.
+2. **Clone o repositório**:
+   ```sh
+   git clone https://github.com/priscillatrevizan/orange-juice-bank.git
+   cd orange-juice-bank
+   ```
+3. **Suba os serviços**:
+   ```sh
+   docker-compose up --build
+   ```
+4. **Acesse**:
+   - Frontend: http://localhost:5173
+   - Backend/API: http://localhost:3000
+
+5. **Mais detalhes**:
+   - Para instruções específicas de cada módulo, consulte os READMEs em `backend/` e `frontend/`.
+   
+    
 
 ---
 
-## 💸 Regras de Negócio
-
-## 💼 Regras de Negócio
-
-As regras de negócio detalhadas para este desafio estão disponíveis no arquivo [`regradenegocio`](./regradenegocio) localizado neste mesmo diretório.  
-Consulte esse arquivo para entender todos os requisitos e restrições que sua solução deve atender.
-
----
-
-## 🧠 Avaliação
-
-Vamos considerar:
-
-- Evidências das regras funcionais do projeto (imagens, vídeos e etc)
-- Qualidade do código e arquitetura
-- Clareza na modelagem do domínio
-- Cobertura de regras de negócio
-- Cobertura em testes de unidade 
-- Criatividade nas soluções e organização do projeto
-- Uso de boas práticas (DDD, SOLID, testes, etc)
-
----
-
-## 📦 Entrega
-
-Você precisará encaminhar seu projeto nesse formulário, e ele deve conter o link do repositório.
-Leve em consideração:
-- Fazer fork ou clone este repositório
-- Fazer commits durante o desenvolvimento
-- Entregar dentro do prazo
-
-Caso entregue fora do prazo, você será desclassificado!
-
----
-
-## 🗓️ Prazo
-
-O desafio inicia no dia **10/07, após a live** e precisa ser entregue até o dia **13/07, às 23:59**.  
-Boa sorte e bom código! 🚀 
+> Dúvidas ou sugestões? Consulte a documentação de cada módulo ou abra uma issue no repositório!
